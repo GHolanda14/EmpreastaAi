@@ -5,6 +5,7 @@
     <string name="bemVindo">Bem-vindo(a) ao Empresta Ai!</string>
     <string name="textoIntroducao">O Empresta Ai é um aplicativo que tem como objetivo o empréstimo de objetos de forma simplificada e rápida.</string>
     <string name="loginErrado">E-mail não cadastro ou senha incorreta, tente novamente</string>
+    <string name="tvVazio">Não existem objetos cadastrados!</string>
 
     <!--Button-->
     <string name="btnLogin">Login</string>
