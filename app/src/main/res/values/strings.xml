@@ -6,15 +6,26 @@
     <string name="textoIntroducao">O Empresta Ai é um aplicativo que tem como objetivo o empréstimo de objetos de forma simplificada e rápida.</string>
     <string name="loginErrado">E-mail não cadastro ou senha incorreta, tente novamente</string>
     <string name="tvVazio">Não existem objetos cadastrados!</string>
+    <string name="tvStatus">Status</string>
 
     <!--Button-->
     <string name="btnLogin">Login</string>
     <string name="btnCadastro">Cadastrar-se</string>
+    <string name="btnFoto">Selecionar foto</string>
+    <string name="btnSalvar">Salvar</string>
+    <string name="btnEditar">Editar</string>
+    <string name="btnExcluir">Excluir</string>
 
     <!--Hint-->
     <string name="hNome">Nome</string>
     <string name="hSenha">Senha</string>
     <string name="hEmail">exemplo@provedor.com</string>
     <string name="hCep">12345-678</string>
+    <string name="hDescricao">Descreva brevemente seu objeto</string>
+    <string name="hObjeto">Nome do Objeto</string>
+
+    <!--ToggleButton-->
+    <string name="tgStatusOn">Disponível</string>
+    <string name="tgStatusOff">Indisponível</string>
 
 </resources>

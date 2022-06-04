@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".VisualizarObjeto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ivObjetoVisuObj"
+                android:layout_width="match_parent"
+                android:layout_height="245dp"
+                android:maxWidth="100dp"
+                android:maxHeight="150dp"
+                app:srcCompat="@drawable/img" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvNomeVisuObj"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/hNome" />
+
+            <TextView
+                android:id="@+id/tvDescricaoVisuObj"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/hDescricao" />
+
+            <TextView
+                android:id="@+id/tvStatusVisuObj"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:baselineAligned="false">
+
+            <Button
+                android:id="@+id/btnEditar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btnEditar" />
+
+            <Button
+                android:id="@+id/btnExcluir"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btnExcluir" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -32,17 +32,17 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 String email = etEmail.getText().toString();
                 String senha = etSenha.getText().toString();
-//                if(email.isEmpty() || senha.isEmpty()){
-//                    Toast.makeText(Login.this,"Preencha todos os campos!", Toast.LENGTH_SHORT).show();
-//                }
-//                else if(email.equals(intent.getStringExtra("email")) &&
-//                        senha.equals(intent.getStringExtra("senha"))){
+                if(email.isEmpty() || senha.isEmpty()){
+                    Toast.makeText(Login.this,"Preencha todos os campos!", Toast.LENGTH_SHORT).show();
+                }
+                else if(email.equals(intent.getStringExtra("email")) &&
+                        senha.equals(intent.getStringExtra("senha"))){
                     Intent intent1 = new Intent(Login.this,com.example.emprestaai.MeusObjetos.class);
                     startActivity(intent1);
-//                }
-//                else{
-//                    tvErro.setVisibility(View.VISIBLE);
-//                }
+                }
+                else{
+                    tvErro.setVisibility(View.VISIBLE);
+                }
             }
         });
 
