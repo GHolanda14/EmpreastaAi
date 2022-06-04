@@ -27,7 +27,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
     TextView tvObjeto;
-    FloatingActionButton fab;
+    FloatingActionButton add, pesquisar;
     int ADD = 1, VISUALIZAR=2, EXCLUIR = 3, EDITAR = 4;
 
     @Override
@@ -37,7 +37,8 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
 
         tvObjeto = (TextView) findViewById(R.id.tvObjeto);
         lista = (RecyclerView) findViewById(R.id.rvObjetos);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        add = (FloatingActionButton) findViewById(R.id.add);
+        pesquisar = (FloatingActionButton) findViewById(R.id.pesquisar);
         lista.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(this);
@@ -52,11 +53,18 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
 
         isListavazia();
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MeusObjetos.this, NovoObjeto.class);
                 startActivityForResult(intent,ADD);
+            }
+        });
+
+        pesquisar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MeusObjetos.this,PesquisarObjetos.class);
             }
         });
     }
