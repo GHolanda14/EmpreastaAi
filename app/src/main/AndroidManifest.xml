@@ -14,6 +14,11 @@
         android:theme="@style/Theme.EmprestaAi"
         tools:targetApi="31">
         <activity
+            android:name=".PesquisarObjetos"
+            android:exported="false"
+            android:label="@string/title_activity_pesquisar_objetos"
+            android:theme="@style/Theme.EmprestaAi.NoActionBar" />
+        <activity
             android:name=".VisualizarObjeto"
             android:exported="false" />
         <activity
@@ -33,7 +38,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Login"
             android:exported="false" />

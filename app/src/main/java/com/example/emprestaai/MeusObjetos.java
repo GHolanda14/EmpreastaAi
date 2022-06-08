@@ -65,6 +65,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MeusObjetos.this,PesquisarObjetos.class);
+                startActivity(intent);
             }
         });
     }
