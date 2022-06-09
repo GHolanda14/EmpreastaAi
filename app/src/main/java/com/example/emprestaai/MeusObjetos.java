@@ -1,23 +1,17 @@
 package com.example.emprestaai;
 
-import static android.content.ContentValues.TAG;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -43,11 +37,8 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
 
         layoutManager = new LinearLayoutManager(this);
         lista.setLayoutManager(layoutManager);
-        //TODO: Conseguir a imagem aparecer aqui
+        //TODO: Conseguir a imagem aparecer aqui (Drawable.createFromPath(data.getStringExtra("url"))
         objetos = new ArrayList<Objeto>();
-        //objetos.add(new Objeto("Escova","Testando aqui a funcionalidade",1,true,Drawable.createFromPath("app/src/main/res/drawable-v24/img.jpg")));
-        //objetos.add(new Objeto("Carteira","Serve para guardar cartao de credito, dinheiro tbm",2,false,Drawable.createFromPath("img.jpg")));
-        //objetos.add(new Objeto("Fone","Melhore sua experciencia ouvindo musica com qualidade",3,true,Drawable.createFromPath("img.jpg")));
         adapter = new ObjetoAdapter(this,objetos);
         lista.setAdapter(adapter);
 
@@ -64,7 +55,19 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         pesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ArrayList<String> nomes = new ArrayList<>();
+                ArrayList<String> descricoes = new ArrayList<>();
+                ArrayList<String> status = new ArrayList<>();
+                for(Objeto obj : objetos){
+                    nomes.add(obj.getNome());
+                    descricoes.add(obj.getDescricao());
+                    status.add(obj.getStatus());
+                }
+
                 Intent intent = new Intent(MeusObjetos.this,PesquisarObjetos.class);
+                intent.putStringArrayListExtra("nomes",nomes);
+                intent.putStringArrayListExtra("descricoes",descricoes);
+                intent.putStringArrayListExtra("status",status);
                 startActivity(intent);
             }
         });
@@ -77,8 +80,8 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             if (resultCode == RESULT_OK) {
                 Objeto obj = new Objeto(data.getStringExtra("nome"),
                         data.getStringExtra("descricao"),
-                        data.getBooleanExtra("status", true),
-                        Drawable.createFromPath(data.getStringExtra("url")));
+                        data.getStringExtra("status"),
+                        getDrawable(R.drawable.img));
                 objetos.add(obj);
                 adapter.notifyItemInserted(objetos.size()-1);
                 isListavazia();
@@ -93,8 +96,8 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             }else if(resultCode == EDITAR){
                 Objeto obj = new Objeto(data.getStringExtra("nome"),
                         data.getStringExtra("descricao"),
-                        data.getBooleanExtra("status",true),
-                        null);
+                        data.getStringExtra("status"),
+                        getDrawable(R.drawable.img));
                 objetos.set(data.getIntExtra("posicao",0),obj);
                 adapter.notifyItemChanged(data.getIntExtra("posicao",0));
             }

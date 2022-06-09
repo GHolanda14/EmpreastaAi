@@ -42,30 +42,23 @@
                 android:layout_height="wrap_content"
                 android:text="@string/hDescricao" />
 
-            <TextView
-                android:id="@+id/tvStatusVisuObj"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:baselineAligned="false">
-
-            <Button
-                android:id="@+id/btnEditar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/btnEditar" />
+            android:layout_gravity="end"
+            android:layout_marginEnd="20dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btnStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/btnExcluir" />
+                android:layout_gravity="start"
+                android:gravity="center"
+                android:text="@string/btnPedir" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

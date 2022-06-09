@@ -1,14 +1,14 @@
 package com.example.emprestaai;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class VisualizarObjeto extends AppCompatActivity {
     TextView tvNome, tvDescricao,tvStatus;
@@ -19,17 +19,17 @@ public class VisualizarObjeto extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualizar_objeto);
 
-        tvNome = (TextView) findViewById(R.id.tvNomeVisuObj);
-        tvDescricao = (TextView) findViewById(R.id.tvDescricaoVisuObj);
+        tvNome = (TextView) findViewById(R.id.tvNomeAlugarObj);
+        tvDescricao = (TextView) findViewById(R.id.tvDescricaoAlugarObj);
         tvStatus = (TextView) findViewById(R.id.tvStatusVisuObj);
         btnEditar = (Button) findViewById(R.id.btnEditar);
-        btnExcluir = (Button) findViewById(R.id.btnExcluir);
+        btnExcluir = (Button) findViewById(R.id.btnStatus);
 
         Intent intent = getIntent();
 
         tvNome.setText(intent.getStringExtra("nome"));
         tvDescricao.setText(intent.getStringExtra("descricao"));
-        String status = intent.getBooleanExtra("status",true) == true ? getString(R.string.tgStatusOn) : getString(R.string.tgStatusOff);
+        String status = intent.getStringExtra("status");
         tvStatus.setText(status);
 
         btnExcluir.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +67,7 @@ public class VisualizarObjeto extends AppCompatActivity {
             if(resultCode == RESULT_OK){
                 tvNome.setText(data.getStringExtra("nome"));
                 tvDescricao.setText(data.getStringExtra("descricao"));
-                String status = data.getBooleanExtra("status",true) == true ? getString(R.string.tgStatusOn) : getString(R.string.tgStatusOff);
+                String status = data.getStringExtra("status");
                 tvStatus.setText(status);
                 setResult(EDITAR,data);
             }else if(resultCode == RESULT_CANCELED){

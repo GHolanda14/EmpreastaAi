@@ -1,17 +1,16 @@
 package com.example.emprestaai;
 
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 
 public class Objeto {
     private String nome;
     private String descricao;
     private Drawable imagem;
-    private boolean status;
+    private String status;
 
     public Objeto(String nome,
                   String descricao,
-                  boolean status,
+                  String status,
                   Drawable imagem) {
         this.nome = nome;
         this.descricao = descricao;
@@ -43,7 +42,7 @@ public class Objeto {
         this.imagem = imagem;
     }
 
-    public boolean getStatus(){return status;}
+    public String getStatus(){return status;}
 
-    public void setStatus(boolean status){ this.status = status;}
+    public void setStatus(String status){ this.status = status;}
 }

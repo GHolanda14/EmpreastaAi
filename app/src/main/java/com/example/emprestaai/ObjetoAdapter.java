@@ -1,14 +1,12 @@
 package com.example.emprestaai;
+
 import android.content.Context;
-import android.graphics.Color;
-import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,7 +61,7 @@ public class ObjetoAdapter extends RecyclerView.Adapter<ObjetoAdapter.ViewHolder
         holder.tvNome.setText(objetos.get(position).getNome());
         holder.tvDescricao.setText(objetos.get(position).getDescricao());
         holder.dImagem.setImageDrawable(objetos.get(position).getImagem());
-        holder.tvStatus.setText(objetos.get(position).getStatus() == true ? "Disponível" : "Indisponível");
+        holder.tvStatus.setText(objetos.get(position).getStatus());
     }
 
     @Override
