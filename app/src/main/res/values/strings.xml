@@ -21,11 +21,23 @@
     <!--Hint-->
     <string name="hNome">Nome</string>
     <string name="hSenha">Senha</string>
-    <string name="hEmail">exemplo@provedor.com</string>
-    <string name="hCep">12345-678</string>
-    <string name="hDescricao">Descreva brevemente seu objeto</string>
+    <string name="hEmail">E-mail</string>
+    <string name="hCep">CEP</string>
+    <string name="hDescricao">Descrição</string>
     <string name="hObjeto">Nome do Objeto</string>
     <string name="hPesquisa">Pesquisa um objeto</string>
+    <string name="hDevolucao">Data de devolução</string>
+    <string name="hRecebimento">Data de recebimento</string>
+    <string name="hContato">Contato</string>
+    <string name="hLocal">Local</string>
+
+    <!-- Example -->
+    <string name="exEmail">exemplo@provedor.com</string>
+    <string name="exCep">12345-678</string>
+    <string name="exDescricao">Descreva brevemente seu objeto</string>
+    <string name="exData">DD/MM</string>
+    <string name="exContato">(DDD) 9XXXX-XXXX</string>
+
     <!--ToggleButton-->
     <string name="tgStatusOn">Disponível</string>
     <string name="tgStatusOff">Indisponível</string>

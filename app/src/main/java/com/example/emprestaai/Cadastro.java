@@ -1,37 +1,38 @@
 package com.example.emprestaai;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 
 public class Cadastro extends AppCompatActivity {
-    EditText etNome, etEmail, etCep, etSenha;
+    TextInputLayout tiNome, tiEmail, tiCep, tiSenha;
     Button btnCadastro;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro);
 
-        etNome = (EditText) findViewById(R.id.etNome);
-        etEmail = (EditText) findViewById(R.id.etEmail);
-        etCep = (EditText) findViewById(R.id.etCep);
-        etSenha = (EditText) findViewById(R.id.etSenha);
+        tiNome = (TextInputLayout) findViewById(R.id.tiNome);
+        tiEmail = (TextInputLayout) findViewById(R.id.tiEmail);
+        tiCep = (TextInputLayout) findViewById(R.id.tiCep);
+        tiSenha = (TextInputLayout) findViewById(R.id.tiSenha);
         btnCadastro = (Button) findViewById(R.id.btnCadastro2);
 
         btnCadastro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Cadastro.this, com.example.emprestaai.Login.class);
-                intent.putExtra("nome",etNome.getText().toString());
-                intent.putExtra("email",etEmail.getText().toString());
-                intent.putExtra("cep",etCep.getText().toString());
-                intent.putExtra("senha",etSenha.getText().toString());
+                intent.putExtra("nome",tiNome.getEditText().getText().toString());
+                intent.putExtra("email",tiEmail.getEditText().getText().toString());
+                intent.putExtra("cep",tiCep.getEditText().getText().toString());
+                intent.putExtra("senha",tiSenha.getEditText().getText().toString());
                 startActivity(intent);
                 Cadastro.this.finish();
             }

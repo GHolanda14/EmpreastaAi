@@ -1,72 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:mask="http://schemas.android.com/apk/res-auto" >
+    tools:context=".SolicitarObjeto">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tiNome"
+            android:id="@+id/tiLocal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:hint="@string/hLocal">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/TextInputEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hNome" />
+                android:layout_height="wrap_content" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tiEmail"
+            android:id="@+id/tiRecebimento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            mask:placeholderText="@string/exEmail">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/TextInputEditText2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hEmail"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tiCep"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            mask:placeholderText="@string/exCep">
+            android:clickable="true"
+            android:focusable="true"
+            android:hint="@string/hRecebimento"
+            app:placeholderText="@string/exData">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/TextInputEditText3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hCep"
-                android:inputType="number" />
+                android:clickable="true"
+                android:inputType="date" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tiSenha"
+            android:id="@+id/tiDevolucao"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:hint="@string/hDevolucao"
+            app:placeholderText="@string/exData">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/TextInputEditText2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tiContato"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hContato"
+            app:placeholderText="@string/exContato">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/TextInputEditText4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hSenha"
-                android:inputType="textPassword" />
+                android:inputType="phone" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/btnCadastro2"
-            android:layout_width="match_parent"
+            android:id="@+id/btnSolicitar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btnCadastro" />
+            android:layout_gravity="end"
+            android:gravity="center"
+            android:text="@string/btnPedir" />
+
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

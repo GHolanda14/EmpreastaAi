@@ -14,9 +14,12 @@
         android:theme="@style/Theme.EmprestaAi"
         tools:targetApi="31">
         <activity
-            android:name=".AlugarObjeto"
-            android:label="@string/activityAlugarObjeto"
+            android:name=".SolicitarObjeto"
             android:exported="false" />
+        <activity
+            android:name=".AlugarObjeto"
+            android:exported="false"
+            android:label="@string/activityAlugarObjeto" />
         <activity
             android:name=".PesquisarObjetos"
             android:exported="false"
@@ -27,12 +30,12 @@
             android:exported="false" />
         <activity
             android:name=".NovoObjeto"
-            android:label="@string/activityNovoObjeto"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/activityNovoObjeto" />
         <activity
             android:name=".MeusObjetos"
-            android:label="@string/activityMeusObjetos"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/activityMeusObjetos">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
