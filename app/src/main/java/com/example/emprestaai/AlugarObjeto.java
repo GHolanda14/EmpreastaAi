@@ -31,7 +31,6 @@ public class AlugarObjeto extends AppCompatActivity {
         btnStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: Página de Intenção do pedido (local,dia,devolução, contato)
                 Intent intent1 = new Intent(AlugarObjeto.this, com.example.emprestaai.SolicitarObjeto.class);
                 startActivity(intent1);
 

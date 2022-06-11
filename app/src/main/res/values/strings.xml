@@ -30,12 +30,12 @@
     <string name="hRecebimento">Data de recebimento</string>
     <string name="hContato">Contato</string>
     <string name="hLocal">Local</string>
+    <string name="hData">Data</string>
 
     <!-- Example -->
     <string name="exEmail">exemplo@provedor.com</string>
     <string name="exCep">12345-678</string>
     <string name="exDescricao">Descreva brevemente seu objeto</string>
-    <string name="exData">DD/MM</string>
     <string name="exContato">(DDD) 9XXXX-XXXX</string>
 
     <!--ToggleButton-->
