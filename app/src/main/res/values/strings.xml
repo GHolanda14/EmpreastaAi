@@ -6,15 +6,48 @@
     <string name="textoIntroducao">O Empresta Ai é um aplicativo que tem como objetivo o empréstimo de objetos de forma simplificada e rápida.</string>
     <string name="loginErrado">E-mail não cadastro ou senha incorreta, tente novamente</string>
     <string name="tvVazio">Não existem objetos cadastrados!</string>
+    <string name="tvStatus">Status</string>
 
     <!--Button-->
     <string name="btnLogin">Login</string>
     <string name="btnCadastro">Cadastrar-se</string>
+    <string name="btnFoto">Selecionar foto</string>
+    <string name="btnSalvar">Salvar</string>
+    <string name="btnEditar">Editar</string>
+    <string name="btnExcluir">Excluir</string>
+    <string name="btnPedir">Pedir</string>
+    <string name="btnIndisponivel">Indisponível</string>
 
     <!--Hint-->
     <string name="hNome">Nome</string>
     <string name="hSenha">Senha</string>
-    <string name="hEmail">exemplo@provedor.com</string>
-    <string name="hCep">12345-678</string>
+    <string name="hEmail">E-mail</string>
+    <string name="hCep">CEP</string>
+    <string name="hDescricao">Descrição</string>
+    <string name="hObjeto">Objeto</string>
+    <string name="hPesquisa">Pesquisa um objeto</string>
+    <string name="hContato">Contato</string>
+    <string name="hLocal">Local de encontro</string>
+    <string name="hData">Período de aluguel</string>
+    <string name="hDono">Dono</string>
 
+    <!-- Example -->
+    <string name="exEmail">exemplo@provedor.com</string>
+    <string name="exCep">12345-678</string>
+    <string name="exDescricao">Descreva brevemente seu objeto</string>
+    <string name="exContato">(DDD) 9XXXX-XXXX</string>
+
+    <!--ToggleButton-->
+    <string name="tgStatusOn">Disponível</string>
+    <string name="tgStatusOff">Indisponível</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+
+    <!--Nomes das activities -->
+    <string name="activityPesquisar">Pesquisar</string>
+    <string name="activityMeusObjetos">Meus objetos</string>
+    <string name="activityAlugarObjeto">Pesquisar</string>
+    <string name="activityNovoObjeto">Adicionar</string>
 </resources>

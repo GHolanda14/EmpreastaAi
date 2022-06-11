@@ -1,19 +1,29 @@
 package com.example.emprestaai;
 
+import android.graphics.drawable.Drawable;
+
 public class Objeto {
     private String nome;
     private String descricao;
-    private int imagem;
-    private int id;
-    private boolean status;
+    private Drawable imagem;
+    private String status;
+    private String dono;
 
-    public Objeto(String nome, String descricao, int imagem, int id) {
+    public Objeto(String dono,
+                  String nome,
+                  String descricao,
+                  String status,
+                  Drawable imagem) {
+        this.dono = dono;
         this.nome = nome;
         this.descricao = descricao;
         this.imagem = imagem;
-        this.id = id;
-        this.status = true;
+        this.status = status;
     }
+
+    public String getDono() { return dono; }
+
+    public void setDono(String dono) {this.dono = dono;}
 
     public String getNome() {
         return nome;
@@ -31,31 +41,15 @@ public class Objeto {
         this.descricao = descricao;
     }
 
-    public int getImagem() {
+    public Drawable getImagem() {
         return imagem;
     }
 
-    public void setImagem(int imagem) {
+    public void setImagem(Drawable imagem) {
         this.imagem = imagem;
     }
 
-    public int getId() {
-        return id;
-    }
+    public String getStatus(){return status;}
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public boolean getStatus(){return status;}
-
-    public void setStatus(boolean status){ this.status = status;}
-
-    @Override
-    public String toString() {
-        return "Objeto{" +
-                "nome='" + nome + '\'' +
-                ", id=" + id +
-                '}';
-    }
+    public void setStatus(String status){ this.status = status;}
 }

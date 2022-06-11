@@ -14,17 +14,35 @@
         android:theme="@style/Theme.EmprestaAi"
         tools:targetApi="31">
         <activity
-            android:name=".NovoObjeto"
+            android:name=".ListaPedidos"
             android:exported="false" />
         <activity
-            android:name=".MeusObjetos"
+            android:name=".AlugarObjeto"
+            android:exported="false"
+            android:label="@string/activityAlugarObjeto" />
+        <activity
+            android:name=".PesquisarObjetos"
+            android:exported="false"
+            android:label="@string/activityPesquisar"
+            android:theme="@style/Theme.EmprestaAi.NoActionBar" />
+        <activity
+            android:name=".VisualizarObjeto"
             android:exported="false" />
+        <activity
+            android:name=".NovoObjeto"
+            android:exported="false"
+            android:label="@string/activityNovoObjeto" />
+        <activity
+            android:name=".MeusObjetos"
+            android:exported="false"
+            android:label="@string/activityMeusObjetos"/>
+
         <activity
             android:name=".Cadastro"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,13 +51,7 @@
         </activity>
         <activity
             android:name=".Login"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.LOGIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false" />
     </application>
 
 </manifest>
