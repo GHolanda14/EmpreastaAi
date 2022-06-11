@@ -11,25 +11,27 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tiEmail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/TextInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hEmail" />
+                android:hint="@string/hEmail"
+                android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tiSenha"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/TextInputEditText2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hSenha" />
+                android:hint="@string/hSenha"
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button

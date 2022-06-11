@@ -50,6 +50,7 @@ public class VisualizarObjeto extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(VisualizarObjeto.this, com.example.emprestaai.NovoObjeto.class);
+                intent1.putExtra("donoAtual",intent.getStringExtra("donoAtual"));
                 intent1.putExtra("nome",tvNome.getText().toString());
                 intent1.putExtra("descricao",tvDescricao.getText().toString());
                 intent1.putExtra("status",tvStatus.getText().toString());

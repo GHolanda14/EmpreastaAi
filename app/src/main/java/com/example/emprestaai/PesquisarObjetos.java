@@ -2,6 +2,7 @@ package com.example.emprestaai;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,7 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
     int PEDIR = 5, SOLICITADO = 6;
+    String donoAtual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +37,24 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         setSupportActionBar(binding.toolbar);
 
         Intent intent = getIntent();
+
+        donoAtual = intent.getStringExtra("donoAtual");
+
+        ArrayList<String> donos = intent.getStringArrayListExtra("donos");
         ArrayList<String> nomes = intent.getStringArrayListExtra("nomes");
         ArrayList<String> descricoes = intent.getStringArrayListExtra("descricoes");
         ArrayList<String> status = intent.getStringArrayListExtra("status");
 
         objetos = new ArrayList<Objeto>();
-        objetos.add(new Objeto("Escova","Testando aqui a funcionalidade",(getString(R.string.tgStatusOn)), getDrawable(R.drawable.img)));
-        objetos.add(new Objeto("Carteira","Serve para guardar cartao de credito, dinheiro tbm",getString(R.string.tgStatusOff),getDrawable(R.drawable.img)));
-        objetos.add(new Objeto("Fone","Melhore sua experciencia ouvindo musica com qualidade",getString(R.string.tgStatusOn),getDrawable(R.drawable.img)));
+        objetos.add(new Objeto("Pedro","Escova","Testando aqui a funcionalidade",(getString(R.string.tgStatusOn)), getDrawable(R.drawable.img)));
+        objetos.add(new Objeto("Pedro","Carteira","Serve para guardar cartao de credito, dinheiro tbm",getString(R.string.tgStatusOff),getDrawable(R.drawable.img)));
+        objetos.add(new Objeto("Josué","Fone","Melhore sua experciencia ouvindo musica com qualidade",getString(R.string.tgStatusOn),getDrawable(R.drawable.img)));
 
         for(int i = 0; i < nomes.size(); i++){
-            objetos.add(new Objeto(nomes.get(i),descricoes.get(i),status.get(i),getDrawable(R.drawable.img)));
+            Log.d("Msg",donoAtual);
+            if(!donos.get(i).equals(donoAtual)){
+                objetos.add(new Objeto(donos.get(i),nomes.get(i),descricoes.get(i),status.get(i),getDrawable(R.drawable.img)));
+            }
         }
 
         lista = (RecyclerView) findViewById(R.id.rvObjetos);
@@ -78,8 +87,8 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         ArrayList<Objeto> objFiltrados = new ArrayList<Objeto>();
 
         for(Objeto objeto : objetos){
-            if(objeto.getNome().toLowerCase().contains(texto)){
-                objFiltrados.add(new Objeto(objeto.getNome(), objeto.getDescricao(),objeto.getStatus(),objeto.getImagem()));
+            if(objeto.getNome().toLowerCase().contains(texto) && !objeto.getDono().equals(donoAtual)){
+                objFiltrados.add(new Objeto(objeto.getDono(),objeto.getNome(), objeto.getDescricao(),objeto.getStatus(),objeto.getImagem()));
             }
         }
         adapter = new ObjetoAdapter(this,objFiltrados);
@@ -90,6 +99,7 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
     public void onItemClicked(int posicao) {
         Intent intent = new Intent(PesquisarObjetos.this,com.example.emprestaai.AlugarObjeto.class);
         Objeto obj = objetos.get(posicao);
+        intent.putExtra("dono",obj.getDono());
         intent.putExtra("nome",obj.getNome());
         intent.putExtra("descricao",obj.getDescricao());
         intent.putExtra("status",obj.getStatus());

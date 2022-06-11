@@ -33,12 +33,14 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 String email = tiEmail.getEditText().getText().toString();
                 String senha = tiSenha.getEditText().getText().toString();
+                String dono = intent.getStringExtra("nome");
                 if(email.isEmpty() || senha.isEmpty()){
                     Toast.makeText(Login.this,"Preencha todos os campos!", Toast.LENGTH_SHORT).show();
                 }
                 else if(email.equals(intent.getStringExtra("email")) &&
                         senha.equals(intent.getStringExtra("senha"))){
                     Intent intent1 = new Intent(Login.this,com.example.emprestaai.MeusObjetos.class);
+                    intent1.putExtra("donoAtual",dono);
                     startActivity(intent1);
                 }
                 else{

@@ -7,16 +7,23 @@ public class Objeto {
     private String descricao;
     private Drawable imagem;
     private String status;
+    private String dono;
 
-    public Objeto(String nome,
+    public Objeto(String dono,
+                  String nome,
                   String descricao,
                   String status,
                   Drawable imagem) {
+        this.dono = dono;
         this.nome = nome;
         this.descricao = descricao;
         this.imagem = imagem;
         this.status = status;
     }
+
+    public String getDono() { return dono; }
+
+    public void setDono(String dono) {this.dono = dono;}
 
     public String getNome() {
         return nome;

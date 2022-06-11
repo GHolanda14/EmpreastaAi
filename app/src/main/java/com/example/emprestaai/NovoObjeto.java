@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,7 +27,7 @@ public class NovoObjeto extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novo_objeto);
 
-        Intent intent1 = getIntent();
+        Intent intent = getIntent();
 
         tiNomeObj = (TextInputLayout) findViewById(R.id.tiNomeObj);
         tiDescObj = (TextInputLayout) findViewById(R.id.tiDescObj);
@@ -35,17 +36,17 @@ public class NovoObjeto extends AppCompatActivity {
         imageView =(ImageView) findViewById(R.id.ivFoto);
         btnAddObj = (Button) findViewById(R.id.btnAddObj);
 
-        if(intent1.hasExtra("nome")){
-            tiNomeObj.getEditText().setText(intent1.getStringExtra("nome"));
-            tiDescObj.getEditText().setText(intent1.getStringExtra("descricao"));
-            tgStatus.setChecked(intent1.getStringExtra("status").equals(getString(R.string.tgStatusOn)) ? true : false);
+        if(intent.hasExtra("nome")){
+            tiNomeObj.getEditText().setText(intent.getStringExtra("nome"));
+            tiDescObj.getEditText().setText(intent.getStringExtra("descricao"));
+            tgStatus.setChecked(intent.getStringExtra("status").equals(getString(R.string.tgStatusOn)) ? true : false);
         }
 
         btnFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent,3);
+                Intent intent1 = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent1,3);
             }
         });
 
@@ -55,16 +56,17 @@ public class NovoObjeto extends AppCompatActivity {
                 if(tiNomeObj.getEditText().getText().toString().isEmpty()){
                     Toast.makeText(NovoObjeto.this, "Preencha o nome!", Toast.LENGTH_SHORT).show();
                 }else {
-                    Intent intent = new Intent();
-                    intent.putExtra("nome", tiNomeObj.getEditText().getText().toString());
-                    intent.putExtra("descricao", tiDescObj.getEditText().getText().toString());
-                    intent.putExtra("status", tgStatus.getText().toString());
+                    Intent intent1 = new Intent();
+                    intent1.putExtra("donoAtual",intent.getStringExtra("donoAtual"));
+                    intent1.putExtra("nome", tiNomeObj.getEditText().getText().toString());
+                    intent1.putExtra("descricao", tiDescObj.getEditText().getText().toString());
+                    intent1.putExtra("status", tgStatus.getText().toString());
                     if(imageView.getDrawable() == null){
-                        intent.putExtra("url", "");//Valor padrão
+                        intent1.putExtra("url", "");//Valor padrão
                     }else{
-                        intent.putExtra("url", imageView.getDrawable().toString());
+                        intent1.putExtra("url", imageView.getDrawable().toString());
                     }
-                    setResult(RESULT_OK, intent);
+                    setResult(RESULT_OK, intent1);
                     NovoObjeto.this.finish();
                 }
             }

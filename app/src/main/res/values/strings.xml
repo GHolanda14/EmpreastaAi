@@ -24,13 +24,12 @@
     <string name="hEmail">E-mail</string>
     <string name="hCep">CEP</string>
     <string name="hDescricao">Descrição</string>
-    <string name="hObjeto">Nome do Objeto</string>
+    <string name="hObjeto">Objeto</string>
     <string name="hPesquisa">Pesquisa um objeto</string>
-    <string name="hDevolucao">Data de devolução</string>
-    <string name="hRecebimento">Data de recebimento</string>
     <string name="hContato">Contato</string>
-    <string name="hLocal">Local</string>
-    <string name="hData">Data</string>
+    <string name="hLocal">Local de encontro</string>
+    <string name="hData">Período de aluguel</string>
+    <string name="hDono">Dono</string>
 
     <!-- Example -->
     <string name="exEmail">exemplo@provedor.com</string>
