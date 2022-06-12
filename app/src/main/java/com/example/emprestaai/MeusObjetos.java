@@ -18,12 +18,13 @@ import java.util.ArrayList;
 
 public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.ItemClicado {
     ArrayList<Objeto> objetos;
+    ArrayList<Pedido> meusPedidos;
     RecyclerView lista;
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
     TextView tvObjeto;
-    FloatingActionButton add, pesquisar;
-    int ADD = 1, VISUALIZAR=2, EXCLUIR = 3, EDITAR = 4;
+    FloatingActionButton add, pesquisar, pedidos;
+    int ADD = 1, VISUALIZAR=2, EXCLUIR = 3, EDITAR = 4, PEDIR = 5, SOLICITADO = 6;
     String donoAtual;
 
     @Override
@@ -34,9 +35,10 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         Intent intent = getIntent();
 
         tvObjeto = (TextView) findViewById(R.id.tvObjeto);
-        lista = (RecyclerView) findViewById(R.id.rvObjetos);
+        lista = (RecyclerView) findViewById(R.id.rvPedidos);
         add = (FloatingActionButton) findViewById(R.id.add);
         pesquisar = (FloatingActionButton) findViewById(R.id.pesquisar);
+        pedidos = (FloatingActionButton) findViewById(R.id.meusPedidos);
         lista.setHasFixedSize(true);
 
         donoAtual = intent.getStringExtra("donoAtual");
@@ -46,6 +48,14 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         objetos = new ArrayList<Objeto>();
         adapter = new ObjetoAdapter(this,objetos);
         lista.setAdapter(adapter);
+
+        meusPedidos = new ArrayList<Pedido>();
+        meusPedidos.add(new Pedido(new Objeto("Pedro",
+                "Escova",
+                "Testando aqui a funcionalidade",
+                "Solicitado", getDrawable(R.drawable.img)),
+                "Rua da pedra",
+                "25 Jun - 30 Jun"));
 
         isListavazia();
 
@@ -74,12 +84,41 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
 
                 Intent intent1 = new Intent(MeusObjetos.this,com.example.emprestaai.PesquisarObjetos.class);
                 intent1.putExtra("donoAtual",donoAtual);
-                Log.d("Msg","MeusObjetos: "+donoAtual);
                 intent1.putStringArrayListExtra("donos",donos);
                 intent1.putStringArrayListExtra("nomes",nomes);
                 intent1.putStringArrayListExtra("descricoes",descricoes);
                 intent1.putStringArrayListExtra("status",status);
-                startActivity(intent1);
+                startActivityForResult(intent1,PEDIR);
+            }
+        });
+
+        pedidos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> donos = new ArrayList<>();
+                ArrayList<String> nomes = new ArrayList<>();
+                ArrayList<String> descricoes = new ArrayList<>();
+                ArrayList<String> periodos = new ArrayList<>();
+                ArrayList<String> locais = new ArrayList<>();
+                ArrayList<String> status = new ArrayList<>();
+                for(Pedido pedido : meusPedidos){
+                    donos.add(pedido.getObjeto().getNome());
+                    nomes.add(pedido.getObjeto().getNome());
+                    descricoes.add(pedido.getObjeto().getDescricao());
+                    periodos.add(pedido.getPeriodo());
+                    locais.add(pedido.getLocal());
+                    status.add(pedido.getObjeto().getStatus());
+                }
+
+                Intent intent1 = new Intent(MeusObjetos.this,com.example.emprestaai.ListaPedidos.class);
+                intent1.putExtra("donoAtual",donoAtual);
+                intent1.putStringArrayListExtra("donos",donos);
+                intent1.putStringArrayListExtra("nomes",nomes);
+                intent1.putStringArrayListExtra("descricoes",descricoes);
+                intent1.putStringArrayListExtra("periodos",periodos);
+                intent1.putStringArrayListExtra("status",status);
+                intent1.putStringArrayListExtra("locais",locais);
+                startActivityForResult(intent1,PEDIR);
             }
         });
     }
@@ -116,6 +155,18 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 objetos.set(data.getIntExtra("posicao",0),obj);
                 adapter.notifyItemChanged(data.getIntExtra("posicao",0));
             }
+        }else if(requestCode == PEDIR){
+            if (resultCode == SOLICITADO){
+                donoAtual = data.getStringExtra("donoAtual");
+                Objeto obj = new Objeto(data.getStringExtra("dono"),
+                        data.getStringExtra("nome"),
+                        data.getStringExtra("descricao"),
+                        data.getStringExtra("status"),
+                        getDrawable(R.drawable.img));
+                Pedido pedido = new Pedido(obj,data.getStringExtra("local"),data.getStringExtra("periodo"));
+                meusPedidos.add(pedido);
+                Log.d("msg","Adicionei o pedido");
+            }
         }
     }
 
@@ -140,5 +191,5 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             tvObjeto.setVisibility(View.GONE);
         }
     }
-
+//Todo:
 }

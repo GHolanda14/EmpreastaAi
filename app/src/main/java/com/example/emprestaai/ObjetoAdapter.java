@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,14 +28,12 @@ public class ObjetoAdapter extends RecyclerView.Adapter<ObjetoAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView tvNome, tvDescricao, tvStatus;
         ImageView dImagem;
-        LinearLayout layout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNome = itemView.findViewById(R.id.tvNome);
-            tvDescricao = itemView.findViewById(R.id.tvDescricao);
+            tvDescricao = itemView.findViewById(R.id.tvPeriodo);
             dImagem = itemView.findViewById(R.id.ivObjeto);
             tvStatus = itemView.findViewById(R.id.tvStatus);
-            layout = itemView.findViewById(R.id.linearLayout);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

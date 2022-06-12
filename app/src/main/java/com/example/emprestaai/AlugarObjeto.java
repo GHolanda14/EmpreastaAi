@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -28,6 +27,7 @@ public class AlugarObjeto extends AppCompatActivity {
     TextInputEditText tiData;
     Button btnSolicitar;
     DatePickerDialog datePickerDialog;
+    int SOLICITADO = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,11 +90,17 @@ public class AlugarObjeto extends AppCompatActivity {
                     Toast.makeText(AlugarObjeto.this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show();
                 }else{
                     Intent intent1 = new Intent(AlugarObjeto.this, com.example.emprestaai.ListaPedidos.class);
+                    intent1.putExtra("donoAtual",intent.getStringExtra("donoAtual"));
                     intent1.putExtra("dono",tvDonoObj.getText().toString().trim());
+                    intent1.putExtra("posicao", intent.getIntExtra("posicao",0));
                     intent1.putExtra("nome",tvNomeAlugarObj.getText().toString().trim());
                     intent1.putExtra("descricao",tvDescricasoAlugarObj.getText().toString().trim());
+                    intent1.putExtra("status","Solicitado");
+                    intent1.putExtra("periodo",tiData.getText().toString());
+                    intent1.putExtra("local",tiLocal.getEditText().getText().toString());
+                    setResult(SOLICITADO,intent1);
                     //startActivity(intent1);
-                    Log.d("Msg","Dono: "+ intent1.getStringExtra("dono")+tiLocal.getEditText().getText().toString() + tiData.getText().toString() + tiContato.getEditText().getText().toString());
+                    AlugarObjeto.this.finish();
                 }
             }
         });

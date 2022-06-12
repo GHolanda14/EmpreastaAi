@@ -3,11 +3,11 @@ package com.example.emprestaai;
 import android.graphics.drawable.Drawable;
 
 public class Objeto {
+    private String dono;
     private String nome;
     private String descricao;
     private Drawable imagem;
     private String status;
-    private String dono;
 
     public Objeto(String dono,
                   String nome,

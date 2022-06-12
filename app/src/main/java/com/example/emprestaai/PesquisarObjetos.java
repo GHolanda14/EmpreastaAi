@@ -2,7 +2,6 @@ package com.example.emprestaai;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,27 +36,27 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         setSupportActionBar(binding.toolbar);
 
         Intent intent = getIntent();
-
-        donoAtual = intent.getStringExtra("donoAtual");
-
-        ArrayList<String> donos = intent.getStringArrayListExtra("donos");
-        ArrayList<String> nomes = intent.getStringArrayListExtra("nomes");
-        ArrayList<String> descricoes = intent.getStringArrayListExtra("descricoes");
-        ArrayList<String> status = intent.getStringArrayListExtra("status");
+        donoAtual = "Gabriel Holanda";
+//        donoAtual = intent.getStringExtra("donoAtual");
+//
+//        ArrayList<String> donos = intent.getStringArrayListExtra("donos");
+//        ArrayList<String> nomes = intent.getStringArrayListExtra("nomes");
+//        ArrayList<String> descricoes = intent.getStringArrayListExtra("descricoes");
+//        ArrayList<String> status = intent.getStringArrayListExtra("status");
 
         objetos = new ArrayList<Objeto>();
         objetos.add(new Objeto("Pedro","Escova","Testando aqui a funcionalidade",(getString(R.string.tgStatusOn)), getDrawable(R.drawable.img)));
         objetos.add(new Objeto("Pedro","Carteira","Serve para guardar cartao de credito, dinheiro tbm",getString(R.string.tgStatusOff),getDrawable(R.drawable.img)));
         objetos.add(new Objeto("Josué","Fone","Melhore sua experciencia ouvindo musica com qualidade",getString(R.string.tgStatusOn),getDrawable(R.drawable.img)));
 
-        for(int i = 0; i < nomes.size(); i++){
-            Log.d("Msg",donoAtual);
-            if(!donos.get(i).equals(donoAtual)){
-                objetos.add(new Objeto(donos.get(i),nomes.get(i),descricoes.get(i),status.get(i),getDrawable(R.drawable.img)));
-            }
-        }
+//        for(int i = 0; i < nomes.size(); i++){
+//            Log.d("Msg",donoAtual);
+//            if(!donos.get(i).equals(donoAtual)){
+//                objetos.add(new Objeto(donos.get(i),nomes.get(i),descricoes.get(i),status.get(i),getDrawable(R.drawable.img)));
+//            }
+//        }
 
-        lista = (RecyclerView) findViewById(R.id.rvObjetos);
+        lista = (RecyclerView) findViewById(R.id.rvPedidos);
         lista.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         lista.setLayoutManager(layoutManager);
@@ -99,6 +98,7 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
     public void onItemClicked(int posicao) {
         Intent intent = new Intent(PesquisarObjetos.this,com.example.emprestaai.AlugarObjeto.class);
         Objeto obj = objetos.get(posicao);
+        //donoatual é oto
         intent.putExtra("dono",obj.getDono());
         intent.putExtra("nome",obj.getNome());
         intent.putExtra("descricao",obj.getDescricao());
@@ -113,6 +113,23 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         if(requestCode == PEDIR){
             if(resultCode == SOLICITADO){
 
+                Objeto obj = new Objeto(data.getStringExtra("dono"),
+                        data.getStringExtra("nome"),
+                        data.getStringExtra("descricao"),
+                        data.getStringExtra("status"),
+                        getDrawable(R.drawable.img));
+                objetos.set(data.getIntExtra("posicao",0),obj);
+                adapter.notifyItemChanged(data.getIntExtra("posicao",0));
+
+                Intent intent = new Intent();
+                intent.putExtra("donoAtual",donoAtual);
+                intent.putExtra("dono",data.getStringExtra("dono"));
+                intent.putExtra("nome",data.getStringExtra("nome"));
+                intent.putExtra("descricao",data.getStringExtra("descricao"));
+                intent.putExtra("status",data.getStringExtra("status"));
+                intent.putExtra("periodo",data.getStringExtra("periodo"));
+                intent.putExtra("local",data.getStringExtra("local"));
+                setResult(SOLICITADO,intent);
             }
         }
     }

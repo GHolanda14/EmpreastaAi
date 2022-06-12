@@ -46,8 +46,15 @@
     <string name="second_fragment_label">Second Fragment</string>
 
     <!--Nomes das activities -->
-    <string name="activityPesquisar">Pesquisar</string>
+    <string name="activityPesquisar">Pesquisa</string>
     <string name="activityMeusObjetos">Meus objetos</string>
-    <string name="activityAlugarObjeto">Pesquisar</string>
-    <string name="activityNovoObjeto">Adicionar</string>
+    <string name="activityAlugarObjeto">Solicitação</string>
+    <string name="activityNovoObjeto">Novo objeto</string>
+    <string name="activityLogin">Login</string>
+    <string name="activityVisualizarObjeto">Visualização</string>
+    <string name="activityListaPedidos">Meus pedidos</string>
+    <string name="activityCadastro">Cadastro</string>
+
+    <!--Status-->
+    <string name="hSolicitado">Solicitado</string>
 </resources>

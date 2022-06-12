@@ -44,11 +44,12 @@
                     android:textColor="#171515" />
 
                 <TextView
-                    android:id="@+id/tvNomeAlugarObj"
+                    android:id="@+id/tvDonoObj"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="8"
-                    android:text="@string/hObjeto" />
+                    android:layout_weight="5"
+                    android:text="@string/hDono" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -65,11 +66,12 @@
                     android:textColor="#171515" />
 
                 <TextView
-                    android:id="@+id/tvDonoObj"
+                    android:id="@+id/tvNomeAlugarObj"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="10"
-                    android:text="@string/hDono" />
+                    android:layout_weight="6"
+                    android:text="@string/hObjeto" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -89,7 +91,7 @@
                     android:id="@+id/tvDescricaoAlugarObj"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="25"
+                    android:layout_weight="10"
                     android:text="@string/hDescricao" />
             </LinearLayout>
 
