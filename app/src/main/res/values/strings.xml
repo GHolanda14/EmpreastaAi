@@ -28,8 +28,8 @@
     <string name="hObjeto">Objeto</string>
     <string name="hPesquisa">Pesquisa um objeto</string>
     <string name="hContato">Contato</string>
-    <string name="hLocal">Local de encontro</string>
-    <string name="hData">Período de aluguel</string>
+    <string name="hLocal">Local</string>
+    <string name="hData">Período</string>
     <string name="hDono">Dono</string>
 
     <!-- Example -->

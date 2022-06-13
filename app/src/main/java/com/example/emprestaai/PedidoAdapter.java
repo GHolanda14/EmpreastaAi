@@ -21,7 +21,7 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView tvNome, tvPeriodo, tvStatus, tvLocalEncontro;
+        TextView tvNome, tvPeriodo, tvStatus, tvLocalEncontro,tvDono;
         ImageView dImagem;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -30,7 +30,7 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.ViewHolder
             dImagem = itemView.findViewById(R.id.ivObjeto);
             tvStatus = itemView.findViewById(R.id.tvStatus);
             tvLocalEncontro = itemView.findViewById(R.id.tvLocalEncontro);
-
+            tvDono = itemView.findViewById(R.id.tvDono);
 
         }
     }
@@ -50,6 +50,7 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.ViewHolder
         holder.tvLocalEncontro.setText(pedidos.get(position).getLocal());
         holder.tvPeriodo.setText(pedidos.get(position).getPeriodo());
         holder.dImagem.setImageDrawable(pedidos.get(position).getObjeto().getImagem());
+        holder.tvDono.setText(pedidos.get(position).getObjeto().getDono());
     }
 
     @Override

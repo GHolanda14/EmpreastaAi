@@ -18,6 +18,7 @@
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_meus_objetos.xml" value="0.72" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_novo_objeto.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_pesquisar_objetos.xml" value="0.2" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_solicitacoes.xml" value="0.11302083333333333" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_solicitar_objeto.xml" value="0.1" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_visualizar_objeto.xml" value="0.16041666666666668" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/cadastro.xml" value="0.22826086956521738" />
@@ -31,7 +32,7 @@
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/fragment_menu.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/fragment_second.xml" value="0.16041666666666668" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/lista_itens.xml" value="0.264" />
-        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/lista_pedidos.xml" value="0.22780797101449277" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/lista_pedidos.xml" value="0.4" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/login.xml" value="0.159375" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/menu.xml" value="0.159375" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/teste.xml" value="0.1721311475409836" />

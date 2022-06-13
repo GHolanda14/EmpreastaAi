@@ -2,6 +2,7 @@ package com.example.emprestaai;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -96,15 +97,15 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
 
     @Override
     public void onItemClicked(int posicao) {
-        Intent intent = new Intent(PesquisarObjetos.this,com.example.emprestaai.AlugarObjeto.class);
+        Intent intent1 = new Intent(PesquisarObjetos.this,com.example.emprestaai.AlugarObjeto.class);
         Objeto obj = objetos.get(posicao);
         //donoatual é oto
-        intent.putExtra("dono",obj.getDono());
-        intent.putExtra("nome",obj.getNome());
-        intent.putExtra("descricao",obj.getDescricao());
-        intent.putExtra("status",obj.getStatus());
-        intent.putExtra("posicao",posicao);
-        startActivityForResult(intent,PEDIR);
+        intent1.putExtra("dono",obj.getDono());
+        intent1.putExtra("nome",obj.getNome());
+        intent1.putExtra("descricao",obj.getDescricao());
+        intent1.putExtra("status",obj.getStatus());
+        intent1.putExtra("posicao",posicao);
+        startActivityForResult(intent1,PEDIR);
     }
 
     @Override
@@ -121,15 +122,17 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
                 objetos.set(data.getIntExtra("posicao",0),obj);
                 adapter.notifyItemChanged(data.getIntExtra("posicao",0));
 
-                Intent intent = new Intent();
-                intent.putExtra("donoAtual",donoAtual);
-                intent.putExtra("dono",data.getStringExtra("dono"));
-                intent.putExtra("nome",data.getStringExtra("nome"));
-                intent.putExtra("descricao",data.getStringExtra("descricao"));
-                intent.putExtra("status",data.getStringExtra("status"));
-                intent.putExtra("periodo",data.getStringExtra("periodo"));
-                intent.putExtra("local",data.getStringExtra("local"));
-                setResult(SOLICITADO,intent);
+                Toast.makeText(this, "Objeto solicitado com sucesso!", Toast.LENGTH_SHORT).show();
+
+                Intent intent1 = new Intent();
+                intent1.putExtra("donoAtual",donoAtual);
+                intent1.putExtra("dono",data.getStringExtra("dono"));
+                intent1.putExtra("nome",data.getStringExtra("nome"));
+                intent1.putExtra("descricao",data.getStringExtra("descricao"));
+                intent1.putExtra("status",data.getStringExtra("status"));
+                intent1.putExtra("periodo",data.getStringExtra("periodo"));
+                intent1.putExtra("local",data.getStringExtra("local"));
+                setResult(SOLICITADO,intent1);
             }
         }
     }

@@ -45,7 +45,7 @@ public class ListaPedidos extends AppCompatActivity{
                     descricoes.get(i),
                     status.get(i),
                     getDrawable(R.drawable.img));
-            pedidos.add(new Pedido(obj,periodos.get(i),locais.get(i)));
+            pedidos.add(new Pedido(obj,locais.get(i),periodos.get(i)));
         }
 
         if(pedidos.isEmpty()){

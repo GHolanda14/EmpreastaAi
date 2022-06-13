@@ -51,23 +51,14 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         lista.setAdapter(adapter);
 
         meusPedidos = new ArrayList<Pedido>();
-//        meusPedidos.fabAdd(new Pedido(new Objeto("Pedro",
-//                "Escova",
-//                "Testando aqui a funcionalidade",
-//                "Solicitado", getDrawable(R.drawable.img)),
-//                "Rua da pedra",
-//                "25 Jun - 30 Jun"));
+        meusPedidos.add(new Pedido(new Objeto("Pedro",
+                "Escova",
+                "Testando aqui a funcionalidade",
+                "Solicitado", getDrawable(R.drawable.img)),
+                "Rua Martinho Lutero, N 2241 - 02 de Agosto",
+                "25 Jun - 30 Jun"));
 
         isListavazia();
-
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent1 = new Intent(MeusObjetos.this, NovoObjeto.class);
-                intent1.putExtra("donoAtual",donoAtual);
-                startActivityForResult(intent1,ADD);
-            }
-        });
 
         //Todo: Solicitar ou recusar pedidos
 
@@ -105,7 +96,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 ArrayList<String> locais = new ArrayList<>();
                 ArrayList<String> status = new ArrayList<>();
                 for(Pedido pedido : meusPedidos){
-                    donos.add(pedido.getObjeto().getNome());
+                    donos.add(pedido.getObjeto().getDono());
                     nomes.add(pedido.getObjeto().getNome());
                     descricoes.add(pedido.getObjeto().getDescricao());
                     periodos.add(pedido.getPeriodo());
@@ -122,6 +113,23 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 intent1.putStringArrayListExtra("status",status);
                 intent1.putStringArrayListExtra("locais",locais);
                 startActivityForResult(intent1,PEDIR);
+            }
+        });
+
+        fabSolicitacoes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(MeusObjetos.this, Solicitacoes.class);
+                startActivity(intent1);
+            }
+        });
+
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(MeusObjetos.this, NovoObjeto.class);
+                intent1.putExtra("donoAtual",donoAtual);
+                startActivityForResult(intent1,ADD);
             }
         });
     }
@@ -168,7 +176,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                         getDrawable(R.drawable.img));
                 Pedido pedido = new Pedido(obj,data.getStringExtra("local"),data.getStringExtra("periodo"));
                 meusPedidos.add(pedido);
-                Log.d("msg","Adicionei o pedido");
+                Log.d("msg","Adicionei o pedido, do dono: "+data.getStringExtra("dono"));
             }
         }
     }

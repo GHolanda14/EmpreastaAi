@@ -23,7 +23,7 @@ import com.google.android.material.textfield.TextInputLayout;
 public class AlugarObjeto extends AppCompatActivity {
     LinearLayout layForm;
     TextView tvNomeAlugarObj, tvDescricasoAlugarObj, tvDonoObj;
-    TextInputLayout tiLocal, tiContato;
+    TextInputLayout tiLocal;
     TextInputEditText tiData;
     Button btnSolicitar;
     DatePickerDialog datePickerDialog;
@@ -40,7 +40,6 @@ public class AlugarObjeto extends AppCompatActivity {
         tvDescricasoAlugarObj = (TextView) findViewById(R.id.tvDescricaoAlugarObj);
         layForm = (LinearLayout) findViewById(R.id.layForm);
         tiLocal = (TextInputLayout) findViewById(R.id.tiLocal);
-        tiContato = (TextInputLayout) findViewById(R.id.tiContato);
         tiData = (TextInputEditText) findViewById(R.id.tiData);
         btnSolicitar = (Button) findViewById(R.id.btnSolicitar);
 
@@ -85,8 +84,7 @@ public class AlugarObjeto extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(tiLocal.getEditText().getText().toString().isEmpty() ||
-                        tiData.getText().toString().isEmpty() ||
-                        tiContato.getEditText().getText().toString().isEmpty()){
+                        tiData.getText().toString().isEmpty()){
                     Toast.makeText(AlugarObjeto.this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show();
                 }else{
                     Intent intent1 = new Intent(AlugarObjeto.this, com.example.emprestaai.ListaPedidos.class);
@@ -99,7 +97,6 @@ public class AlugarObjeto extends AppCompatActivity {
                     intent1.putExtra("periodo",tiData.getText().toString());
                     intent1.putExtra("local",tiLocal.getEditText().getText().toString());
                     setResult(SOLICITADO,intent1);
-                    //startActivity(intent1);
                     AlugarObjeto.this.finish();
                 }
             }
