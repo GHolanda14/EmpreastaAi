@@ -7,6 +7,7 @@
     <string name="loginErrado">E-mail não cadastro ou senha incorreta, tente novamente</string>
     <string name="tvVazio">Não existem objetos cadastrados!</string>
     <string name="tvStatus">Status</string>
+    <string name="tvListPedidosVazia">Nenhum pedido foi feito</string>
 
     <!--Button-->
     <string name="btnLogin">Login</string>

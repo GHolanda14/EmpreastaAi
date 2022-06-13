@@ -52,7 +52,7 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
 //        for(int i = 0; i < nomes.size(); i++){
 //            Log.d("Msg",donoAtual);
 //            if(!donos.get(i).equals(donoAtual)){
-//                objetos.add(new Objeto(donos.get(i),nomes.get(i),descricoes.get(i),status.get(i),getDrawable(R.drawable.img)));
+//                objetos.fabAdd(new Objeto(donos.get(i),nomes.get(i),descricoes.get(i),status.get(i),getDrawable(R.drawable.img)));
 //            }
 //        }
 

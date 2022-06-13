@@ -35,49 +35,75 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="@dimen/text_margin"
-        app:layout_constraintTop_toBottomOf="parent"
-        android:layout_alignParentBottom="true">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center|center_horizontal"
-        android:gravity="center"
-        android:orientation="horizontal">>
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/pesquisar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:clickable="true"
-            android:contentDescription="@string/activityPesquisar"
-            android:focusable="true"
-            app:srcCompat="@android:drawable/ic_menu_search" />
+        android:paddingBottom="5dp"
+        app:layout_constraintTop_toBottomOf="parent">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/meusPedidos"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:contentDescription="@string/activityListaPedidos"
-            android:focusable="true"
-            app:srcCompat="@android:drawable/ic_menu_view" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center|center_horizontal|top"
+            android:gravity="center|top"
+            android:orientation="horizontal">>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:clickable="true"
-            android:contentDescription="@string/activityNovoObjeto"
-            android:focusable="true"
-            app:srcCompat="@android:drawable/ic_input_add" />
-    </LinearLayout>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/pesquisar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:clickable="true"
+                android:contentDescription="@string/activityPesquisar"
+                android:focusable="true"
+                android:src="@drawable/ic_pedir_objetos_foreground"
+                app:fabCustomSize="56dp"
+                app:maxImageSize="90dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/meusPedidos"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1"
+                android:clickable="true"
+
+                android:contentDescription="@string/activityListaPedidos"
+                android:focusable="true"
+                android:foregroundGravity="top"
+                android:src="@drawable/ic_pedidos_foreground"
+                app:fabCustomSize="56dp"
+                app:maxImageSize="95dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/solicitacoes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:contentDescription="@string/activityAlugarObjeto"
+                android:focusable="true"
+                android:scaleType="center"
+                android:src="@drawable/ic_solicitacoes_foreground"
+                app:fabCustomSize="56dp"
+                app:maxImageSize="90dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:clickable="true"
+                android:contentDescription="@string/activityNovoObjeto"
+                android:focusable="true"
+                android:src="@drawable/ic_novo_objeto_foreground"
+                app:fabCustomSize="56dp"
+                app:maxImageSize="90dp" />
+        </LinearLayout>
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 

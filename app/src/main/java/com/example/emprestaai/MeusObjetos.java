@@ -23,7 +23,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
     TextView tvObjeto;
-    FloatingActionButton add, pesquisar, pedidos;
+    FloatingActionButton fabAdd, fabPesquisar, fabPedidos, fabSolicitacoes;
     int ADD = 1, VISUALIZAR=2, EXCLUIR = 3, EDITAR = 4, PEDIR = 5, SOLICITADO = 6;
     String donoAtual;
 
@@ -36,9 +36,10 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
 
         tvObjeto = (TextView) findViewById(R.id.tvObjeto);
         lista = (RecyclerView) findViewById(R.id.rvPedidos);
-        add = (FloatingActionButton) findViewById(R.id.add);
-        pesquisar = (FloatingActionButton) findViewById(R.id.pesquisar);
-        pedidos = (FloatingActionButton) findViewById(R.id.meusPedidos);
+        fabAdd = (FloatingActionButton) findViewById(R.id.add);
+        fabPesquisar = (FloatingActionButton) findViewById(R.id.pesquisar);
+        fabPedidos = (FloatingActionButton) findViewById(R.id.meusPedidos);
+        fabSolicitacoes = (FloatingActionButton) findViewById(R.id.solicitacoes);
         lista.setHasFixedSize(true);
 
         donoAtual = intent.getStringExtra("donoAtual");
@@ -50,16 +51,16 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         lista.setAdapter(adapter);
 
         meusPedidos = new ArrayList<Pedido>();
-        meusPedidos.add(new Pedido(new Objeto("Pedro",
-                "Escova",
-                "Testando aqui a funcionalidade",
-                "Solicitado", getDrawable(R.drawable.img)),
-                "Rua da pedra",
-                "25 Jun - 30 Jun"));
+//        meusPedidos.fabAdd(new Pedido(new Objeto("Pedro",
+//                "Escova",
+//                "Testando aqui a funcionalidade",
+//                "Solicitado", getDrawable(R.drawable.img)),
+//                "Rua da pedra",
+//                "25 Jun - 30 Jun"));
 
         isListavazia();
 
-        add.setOnClickListener(new View.OnClickListener() {
+        fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent1 = new Intent(MeusObjetos.this, NovoObjeto.class);
@@ -68,7 +69,9 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             }
         });
 
-        pesquisar.setOnClickListener(new View.OnClickListener() {
+        //Todo: Solicitar ou recusar pedidos
+
+        fabPesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ArrayList<String> donos = new ArrayList<>();
@@ -81,7 +84,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                     descricoes.add(obj.getDescricao());
                     status.add(obj.getStatus());
                 }
-
+                //Todo: Ver se vale a pena passar os objetos ou pelo menos alterar
                 Intent intent1 = new Intent(MeusObjetos.this,com.example.emprestaai.PesquisarObjetos.class);
                 intent1.putExtra("donoAtual",donoAtual);
                 intent1.putStringArrayListExtra("donos",donos);
@@ -92,7 +95,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             }
         });
 
-        pedidos.setOnClickListener(new View.OnClickListener() {
+        fabPedidos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ArrayList<String> donos = new ArrayList<>();
@@ -191,5 +194,4 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             tvObjeto.setVisibility(View.GONE);
         }
     }
-//Todo:
 }

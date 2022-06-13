@@ -2,6 +2,8 @@ package com.example.emprestaai;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,6 +16,7 @@ public class ListaPedidos extends AppCompatActivity{
     RecyclerView listaPedidos;
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
+    TextView tvListPedidosVazio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +25,7 @@ public class ListaPedidos extends AppCompatActivity{
 
         Intent intent = getIntent();
         listaPedidos = (RecyclerView) findViewById(R.id.rvPedidos);
+        tvListPedidosVazio = (TextView) findViewById(R.id.tvListPedidosVazio);
         listaPedidos.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(this);
@@ -42,6 +46,14 @@ public class ListaPedidos extends AppCompatActivity{
                     status.get(i),
                     getDrawable(R.drawable.img));
             pedidos.add(new Pedido(obj,periodos.get(i),locais.get(i)));
+        }
+
+        if(pedidos.isEmpty()){
+            tvListPedidosVazio.setVisibility(View.VISIBLE);
+            listaPedidos.setVisibility(View.GONE);
+        }else{
+            tvListPedidosVazio.setVisibility(View.GONE);
+            listaPedidos.setVisibility(View.VISIBLE);
         }
 
         adapter = new PedidoAdapter(this,pedidos);
