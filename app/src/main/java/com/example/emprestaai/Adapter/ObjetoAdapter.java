@@ -1,4 +1,4 @@
-package com.example.emprestaai;
+package com.example.emprestaai.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.emprestaai.Model.Objeto;
+import com.example.emprestaai.R;
+
 import java.util.ArrayList;
 
 public class ObjetoAdapter extends RecyclerView.Adapter<ObjetoAdapter.ViewHolder> {
@@ -17,7 +20,7 @@ public class ObjetoAdapter extends RecyclerView.Adapter<ObjetoAdapter.ViewHolder
     ItemClicado activity;
 
     public interface ItemClicado{
-        void onItemClicked(int posicao);
+        void onItemClicked(int posicao, ArrayList<Objeto> objetos);
     }
 
     public ObjetoAdapter(Context context, ArrayList<Objeto> lista){
@@ -38,7 +41,7 @@ public class ObjetoAdapter extends RecyclerView.Adapter<ObjetoAdapter.ViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activity.onItemClicked(objetos.indexOf((Objeto) itemView.getTag()));
+                    activity.onItemClicked(objetos.indexOf((Objeto) itemView.getTag()),objetos);
                 }
             });
         }
@@ -56,8 +59,6 @@ public class ObjetoAdapter extends RecyclerView.Adapter<ObjetoAdapter.ViewHolder
         holder.itemView.setTag(objetos.get(position));
 
         holder.tvNome.setText(objetos.get(position).getNome());
-        holder.tvDescricao.setText(objetos.get(position).getDescricao());
-        holder.dImagem.setImageDrawable(objetos.get(position).getImagem());
         holder.tvStatus.setText(objetos.get(position).getStatus());
     }
 

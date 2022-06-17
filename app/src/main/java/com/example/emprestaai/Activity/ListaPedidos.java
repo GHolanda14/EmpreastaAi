@@ -1,4 +1,4 @@
-package com.example.emprestaai;
+package com.example.emprestaai.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.emprestaai.Adapter.PedidoAdapter;
+import com.example.emprestaai.Model.Objeto;
+import com.example.emprestaai.Model.Pedido;
+import com.example.emprestaai.R;
 
 import java.util.ArrayList;
 
@@ -35,16 +40,14 @@ public class ListaPedidos extends AppCompatActivity{
         ArrayList<String> donos = intent.getStringArrayListExtra("donos");
         ArrayList<String> nomes = intent.getStringArrayListExtra("nomes");
         ArrayList<String> periodos = intent.getStringArrayListExtra("periodos");
-        ArrayList<String> descricoes = intent.getStringArrayListExtra("descricoes");
         ArrayList<String> locais = intent.getStringArrayListExtra("locais");
         ArrayList<String> status = intent.getStringArrayListExtra("status");
 
         for(int i = 0; i < nomes.size(); i++){
-            Objeto obj = new Objeto(donos.get(i),
+            Objeto obj = new Objeto("",donos.get(i),
                     nomes.get(i),
-                    descricoes.get(i),
                     status.get(i),
-                    getDrawable(R.drawable.img));
+                    null);
             pedidos.add(new Pedido(obj,locais.get(i),periodos.get(i)));
         }
 

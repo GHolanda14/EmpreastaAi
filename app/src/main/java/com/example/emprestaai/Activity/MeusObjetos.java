@@ -1,6 +1,7 @@
-package com.example.emprestaai;
+package com.example.emprestaai.Activity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.emprestaai.Adapter.ObjetoAdapter;
+import com.example.emprestaai.DAO.ObjetoDAO;
+import com.example.emprestaai.Model.Objeto;
+import com.example.emprestaai.Model.Pedido;
+import com.example.emprestaai.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -25,7 +31,8 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     TextView tvObjeto;
     FloatingActionButton fabAdd, fabPesquisar, fabPedidos, fabSolicitacoes;
     int ADD = 1, VISUALIZAR=2, EXCLUIR = 3, EDITAR = 4, PEDIR = 5, SOLICITADO = 6;
-    String donoAtual;
+    String donoAtual, idDono;
+    ObjetoDAO objetoDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +42,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         Intent intent = getIntent();
 
         tvObjeto = (TextView) findViewById(R.id.tvObjeto);
+        tvObjeto.setVisibility(View.GONE);
         lista = (RecyclerView) findViewById(R.id.rvPedidos);
         fabAdd = (FloatingActionButton) findViewById(R.id.add);
         fabPesquisar = (FloatingActionButton) findViewById(R.id.pesquisar);
@@ -43,22 +51,30 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         lista.setHasFixedSize(true);
 
         donoAtual = intent.getStringExtra("donoAtual");
+        idDono = intent.getStringExtra("idDono");
         layoutManager = new LinearLayoutManager(this);
         lista.setLayoutManager(layoutManager);
-        //TODO: Conseguir a imagem aparecer aqui (Drawable.createFromPath(data.getStringExtra("url"))
+
         objetos = new ArrayList<Objeto>();
+        objetoDAO = new ObjetoDAO(com.example.emprestaai.Activity.MeusObjetos.this);
+        Cursor cursor = objetoDAO.procurarObjetosDono(idDono);
+
+        if(cursor.getCount() == 0){
+            isListavazia();
+        }else{
+            while(cursor.moveToNext()){
+                Objeto obj = new Objeto(idDono,donoAtual,
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        null);
+                objetos.add(obj);
+            }
+        }
+
         adapter = new ObjetoAdapter(this,objetos);
         lista.setAdapter(adapter);
 
         meusPedidos = new ArrayList<Pedido>();
-        meusPedidos.add(new Pedido(new Objeto("Pedro",
-                "Escova",
-                "Testando aqui a funcionalidade",
-                "Solicitado", getDrawable(R.drawable.img)),
-                "Rua Martinho Lutero, N 2241 - 02 de Agosto",
-                "25 Jun - 30 Jun"));
-
-        isListavazia();
 
         //Todo: Solicitar ou recusar pedidos
 
@@ -67,20 +83,18 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             public void onClick(View v) {
                 ArrayList<String> donos = new ArrayList<>();
                 ArrayList<String> nomes = new ArrayList<>();
-                ArrayList<String> descricoes = new ArrayList<>();
                 ArrayList<String> status = new ArrayList<>();
                 for(Objeto obj : objetos){
                     donos.add(obj.getDono());
                     nomes.add(obj.getNome());
-                    descricoes.add(obj.getDescricao());
                     status.add(obj.getStatus());
                 }
                 //Todo: Ver se vale a pena passar os objetos ou pelo menos alterar
-                Intent intent1 = new Intent(MeusObjetos.this,com.example.emprestaai.PesquisarObjetos.class);
+                Intent intent1 = new Intent(MeusObjetos.this, PesquisarObjetos.class);
                 intent1.putExtra("donoAtual",donoAtual);
+                intent1.putExtra("idDono",idDono);
                 intent1.putStringArrayListExtra("donos",donos);
                 intent1.putStringArrayListExtra("nomes",nomes);
-                intent1.putStringArrayListExtra("descricoes",descricoes);
                 intent1.putStringArrayListExtra("status",status);
                 startActivityForResult(intent1,PEDIR);
             }
@@ -91,24 +105,21 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             public void onClick(View v) {
                 ArrayList<String> donos = new ArrayList<>();
                 ArrayList<String> nomes = new ArrayList<>();
-                ArrayList<String> descricoes = new ArrayList<>();
                 ArrayList<String> periodos = new ArrayList<>();
                 ArrayList<String> locais = new ArrayList<>();
                 ArrayList<String> status = new ArrayList<>();
                 for(Pedido pedido : meusPedidos){
                     donos.add(pedido.getObjeto().getDono());
                     nomes.add(pedido.getObjeto().getNome());
-                    descricoes.add(pedido.getObjeto().getDescricao());
                     periodos.add(pedido.getPeriodo());
                     locais.add(pedido.getLocal());
                     status.add(pedido.getObjeto().getStatus());
                 }
 
-                Intent intent1 = new Intent(MeusObjetos.this,com.example.emprestaai.ListaPedidos.class);
+                Intent intent1 = new Intent(MeusObjetos.this, ListaPedidos.class);
                 intent1.putExtra("donoAtual",donoAtual);
                 intent1.putStringArrayListExtra("donos",donos);
                 intent1.putStringArrayListExtra("nomes",nomes);
-                intent1.putStringArrayListExtra("descricoes",descricoes);
                 intent1.putStringArrayListExtra("periodos",periodos);
                 intent1.putStringArrayListExtra("status",status);
                 intent1.putStringArrayListExtra("locais",locais);
@@ -129,22 +140,30 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             public void onClick(View view) {
                 Intent intent1 = new Intent(MeusObjetos.this, NovoObjeto.class);
                 intent1.putExtra("donoAtual",donoAtual);
+                intent1.putExtra("idDono",idDono);
                 startActivityForResult(intent1,ADD);
             }
         });
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ADD) {
             if (resultCode == RESULT_OK) {
-                donoAtual = data.getStringExtra("donoAtual");
-                Objeto obj = new Objeto(donoAtual,
+                idDono = data.getStringExtra("idDono");
+
+                objetoDAO.addObjeto(idDono,
                         data.getStringExtra("nome"),
-                        data.getStringExtra("descricao"),
+                        data.getStringExtra("status"));
+
+                Objeto obj = new Objeto(idDono,
+                        donoAtual,
+                        data.getStringExtra("nome"),
                         data.getStringExtra("status"),
-                        getDrawable(R.drawable.img));
+                        null);
                 objetos.add(obj);
                 adapter.notifyItemInserted(objetos.size()-1);
                 isListavazia();
@@ -158,22 +177,24 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 isListavazia();
             }else if(resultCode == EDITAR){
                 donoAtual = data.getStringExtra("donoAtual");
-                Objeto obj = new Objeto(donoAtual,
+                idDono = data.getStringExtra("idDono");
+
+                Objeto obj = new Objeto(idDono,
+                        donoAtual,
                         data.getStringExtra("nome"),
-                        data.getStringExtra("descricao"),
                         data.getStringExtra("status"),
-                        getDrawable(R.drawable.img));
+                        null);
                 objetos.set(data.getIntExtra("posicao",0),obj);
                 adapter.notifyItemChanged(data.getIntExtra("posicao",0));
             }
         }else if(requestCode == PEDIR){
             if (resultCode == SOLICITADO){
                 donoAtual = data.getStringExtra("donoAtual");
-                Objeto obj = new Objeto(data.getStringExtra("dono"),
+                Objeto obj = new Objeto(idDono,
+                        data.getStringExtra("dono"),
                         data.getStringExtra("nome"),
-                        data.getStringExtra("descricao"),
                         data.getStringExtra("status"),
-                        getDrawable(R.drawable.img));
+                        null);
                 Pedido pedido = new Pedido(obj,data.getStringExtra("local"),data.getStringExtra("periodo"));
                 meusPedidos.add(pedido);
                 Log.d("msg","Adicionei o pedido, do dono: "+data.getStringExtra("dono"));
@@ -182,17 +203,16 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     }
 
     @Override
-    public void onItemClicked(int posicao) {
-        Intent intent = new Intent(MeusObjetos.this,com.example.emprestaai.VisualizarObjeto.class);
-        Objeto obj = objetos.get(posicao);
+    public void onItemClicked(int posicao, ArrayList<Objeto> objetos) {
+        Intent intent = new Intent(MeusObjetos.this, VisualizarObjeto.class);
+        Objeto obj = this.objetos.get(posicao);
         intent.putExtra("donoAtual",obj.getDono());
+        intent.putExtra("idObjeto",obj.getIdObjeto());
         intent.putExtra("nome",obj.getNome());
-        intent.putExtra("descricao",obj.getDescricao());
         intent.putExtra("status",obj.getStatus());
         intent.putExtra("posicao",posicao);
         startActivityForResult(intent,VISUALIZAR);
     }
-
     public void isListavazia(){
         if (objetos.isEmpty()) {
             lista.setVisibility(View.GONE);

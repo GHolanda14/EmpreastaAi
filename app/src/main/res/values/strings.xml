@@ -4,11 +4,12 @@
     <!--TextView-->
     <string name="bemVindo">Bem-vindo(a) ao Empresta Ai!</string>
     <string name="textoIntroducao">O Empresta Ai é um aplicativo que tem como objetivo o empréstimo de objetos de forma simplificada e rápida.</string>
-    <string name="loginErrado">E-mail não cadastro ou senha incorreta, tente novamente</string>
+    <string name="loginErrado">E-mail ou senha incorreta, tente novamente</string>
+    <string name="emailNaoEncontrado">E-mail não cadastrado do banco de dados</string>
     <string name="tvVazio">Não existem objetos cadastrados!</string>
     <string name="tvStatus">Status</string>
     <string name="tvListPedidosVazia">Nenhum pedido foi feito</string>
-
+    <string name="tvEmailCadastrado">Esse e-mail já está cadastrado!</string>
     <!--Button-->
     <string name="btnLogin">Login</string>
     <string name="btnCadastro">Cadastrar-se</string>

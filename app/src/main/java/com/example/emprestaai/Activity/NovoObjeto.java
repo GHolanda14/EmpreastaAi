@@ -1,10 +1,11 @@
-package com.example.emprestaai;
+package com.example.emprestaai.Activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,15 +14,18 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import com.example.emprestaai.R;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class NovoObjeto extends AppCompatActivity {
     Button btnFoto, btnAddObj;
     ImageView imageView;
-    TextInputLayout tiNomeObj, tiDescObj;
+    TextInputLayout tiNomeObj;
     ToggleButton tgStatus;
     int EDITAR = 4;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,23 +34,30 @@ public class NovoObjeto extends AppCompatActivity {
         Intent intent = getIntent();
 
         tiNomeObj = (TextInputLayout) findViewById(R.id.tiNomeObj);
-        tiDescObj = (TextInputLayout) findViewById(R.id.tiDescObj);
         tgStatus = (ToggleButton) findViewById(R.id.tgStatus);
         btnFoto = (Button) findViewById(R.id.btnFoto);
         imageView =(ImageView) findViewById(R.id.ivFoto);
         btnAddObj = (Button) findViewById(R.id.btnAddObj);
 
+
+
         if(intent.hasExtra("nome")){
             tiNomeObj.getEditText().setText(intent.getStringExtra("nome"));
-            tiDescObj.getEditText().setText(intent.getStringExtra("descricao"));
             tgStatus.setChecked(intent.getStringExtra("status").equals(getString(R.string.tgStatusOn)) ? true : false);
         }
 
         btnFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ActivityCompat.requestPermissions(NovoObjeto.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+                        PackageManager.PERMISSION_GRANTED);
                 Intent intent1 = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                //long selectedImageUri = ContentUris.parseId(Uri.parse());
+                //Bitmap bm = MediaStore.Images.Thumbnails.getThumbnail(                        .getContentResolver(), selectedImageUri,MediaStore.Images.Thumbnails.MICRO_KIND,                        null );
                 startActivityForResult(intent1,3);
+                //Log.d("Msg","depoiss de chamar: "+intent1.getData().getPath().);
+                //selectedImageUri = ContentUris.parseId(Uri.parse(intent1.getData().getPath()));
             }
         });
 
@@ -58,8 +69,8 @@ public class NovoObjeto extends AppCompatActivity {
                 }else {
                     Intent intent1 = new Intent();
                     intent1.putExtra("donoAtual",intent.getStringExtra("donoAtual"));
+                    intent1.putExtra("idObjeto",intent.getStringExtra("idObjeto"));
                     intent1.putExtra("nome", tiNomeObj.getEditText().getText().toString());
-                    intent1.putExtra("descricao", tiDescObj.getEditText().getText().toString());
                     intent1.putExtra("status", tgStatus.getText().toString());
                     if(imageView.getDrawable() == null){
                         intent1.putExtra("url", "");//Valor padrão

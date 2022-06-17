@@ -1,6 +1,8 @@
-package com.example.emprestaai;
+package com.example.emprestaai.Model;
 
-public class Pedido {
+import java.io.Serializable;
+
+public class Pedido implements Serializable {
     Objeto objeto;
     String local;
     String periodo;

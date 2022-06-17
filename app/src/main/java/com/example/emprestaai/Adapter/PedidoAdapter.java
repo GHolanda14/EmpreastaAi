@@ -1,4 +1,4 @@
-package com.example.emprestaai;
+package com.example.emprestaai.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.emprestaai.Model.Pedido;
+import com.example.emprestaai.R;
 
 import java.util.ArrayList;
 
@@ -49,7 +52,6 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.ViewHolder
         holder.tvStatus.setText("Solicitado");
         holder.tvLocalEncontro.setText(pedidos.get(position).getLocal());
         holder.tvPeriodo.setText(pedidos.get(position).getPeriodo());
-        holder.dImagem.setImageDrawable(pedidos.get(position).getObjeto().getImagem());
         holder.tvDono.setText(pedidos.get(position).getObjeto().getDono());
     }
 

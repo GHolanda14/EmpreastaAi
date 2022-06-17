@@ -1,7 +1,11 @@
-package com.example.emprestaai;
+package com.example.emprestaai.Activity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Pair;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -11,6 +15,11 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.emprestaai.Adapter.ObjetoAdapter;
+import com.example.emprestaai.DAO.ObjetoDAO;
+import com.example.emprestaai.DAO.UsuarioDAO;
+import com.example.emprestaai.Model.Objeto;
+import com.example.emprestaai.R;
 import com.example.emprestaai.databinding.ActivityPesquisarObjetosBinding;
 
 import java.util.ArrayList;
@@ -24,8 +33,11 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
     RecyclerView lista;
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
+    TextView tvObjVazio;
     int PEDIR = 5, SOLICITADO = 6;
     String donoAtual;
+    ObjetoDAO objetoDAO;
+    UsuarioDAO usuarioDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,21 +54,16 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
 //
 //        ArrayList<String> donos = intent.getStringArrayListExtra("donos");
 //        ArrayList<String> nomes = intent.getStringArrayListExtra("nomes");
-//        ArrayList<String> descricoes = intent.getStringArrayListExtra("descricoes");
 //        ArrayList<String> status = intent.getStringArrayListExtra("status");
 
         objetos = new ArrayList<Objeto>();
-        objetos.add(new Objeto("Pedro","Escova","Testando aqui a funcionalidade",(getString(R.string.tgStatusOn)), getDrawable(R.drawable.img)));
-        objetos.add(new Objeto("Pedro","Carteira","Serve para guardar cartao de credito, dinheiro tbm",getString(R.string.tgStatusOff),getDrawable(R.drawable.img)));
-        objetos.add(new Objeto("Josué","Fone","Melhore sua experciencia ouvindo musica com qualidade",getString(R.string.tgStatusOn),getDrawable(R.drawable.img)));
+        objetoDAO = new ObjetoDAO(com.example.emprestaai.Activity.PesquisarObjetos.this);
+//        objetos.add(new Objeto("Pedro","Escova",(getString(R.string.tgStatusOn)), null));
+//        objetos.add(new Objeto("Pedro","Carteira",getString(R.string.tgStatusOff),null));
+//        objetos.add(new Objeto("Josué","Fone",getString(R.string.tgStatusOn),null));
+        carregarObjetos(intent.getStringExtra("idDono"));
 
-//        for(int i = 0; i < nomes.size(); i++){
-//            Log.d("Msg",donoAtual);
-//            if(!donos.get(i).equals(donoAtual)){
-//                objetos.fabAdd(new Objeto(donos.get(i),nomes.get(i),descricoes.get(i),status.get(i),getDrawable(R.drawable.img)));
-//            }
-//        }
-
+        tvObjVazio = (TextView) findViewById(R.id.tvObjVazio);
         lista = (RecyclerView) findViewById(R.id.rvPedidos);
         lista.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -83,12 +90,40 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         });
     }
 
+    private void carregarObjetos(String idDono) {
+        Cursor cursor = objetoDAO.procurarObjetos(idDono);
+        usuarioDAO = new UsuarioDAO(com.example.emprestaai.Activity.PesquisarObjetos.this);
+        Cursor cursor2 = usuarioDAO.pegarNomes();
+
+        ArrayList<Pair<Integer, String>> pares = new ArrayList<Pair<Integer,String>>();
+        while (cursor2.moveToNext()){
+            pares.add(new Pair<Integer, String>(cursor2.getInt(0),cursor2.getString(1)));
+        }
+        if(cursor.getCount() == 0){
+            listaVazia();
+        }else{
+            while (cursor.moveToNext()){
+                String nomeDono = "";
+                for(Pair<Integer,String> par : pares){
+                    if(par.first == cursor.getInt(1)){
+                        nomeDono = par.second;
+                        break;
+                    }
+                }
+                objetos.add(new Objeto(Integer.toString(cursor.getInt(0)),
+                        nomeDono,
+                        cursor.getString(2),
+                        cursor.getString(3),null));
+            }
+        }
+    }
+
     public void buscaAoDigitar(String texto){
         ArrayList<Objeto> objFiltrados = new ArrayList<Objeto>();
 
         for(Objeto objeto : objetos){
             if(objeto.getNome().toLowerCase().contains(texto) && !objeto.getDono().equals(donoAtual)){
-                objFiltrados.add(new Objeto(objeto.getDono(),objeto.getNome(), objeto.getDescricao(),objeto.getStatus(),objeto.getImagem()));
+                objFiltrados.add(new Objeto(objeto.getIdObjeto(),objeto.getDono(),objeto.getNome(),objeto.getStatus(),objeto.getImagem()));
             }
         }
         adapter = new ObjetoAdapter(this,objFiltrados);
@@ -96,15 +131,23 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
     }
 
     @Override
-    public void onItemClicked(int posicao) {
-        Intent intent1 = new Intent(PesquisarObjetos.this,com.example.emprestaai.AlugarObjeto.class);
-        Objeto obj = objetos.get(posicao);
+    public void onItemClicked(int posicao, ArrayList<Objeto> listaObjetos) {
+        Intent intent1 = new Intent(PesquisarObjetos.this, AlugarObjeto.class);
+        Objeto obj = listaObjetos.get(posicao);
+        int indexObj = 0;
+        //TOdo: aprimorar isso aqui vei
+        for(Objeto o : objetos){
+            if(o.getIdObjeto().equals(obj.getIdObjeto())) {
+                indexObj = objetos.indexOf(o);
+                break;
+            }
+        }
+
         //donoatual é oto
         intent1.putExtra("dono",obj.getDono());
         intent1.putExtra("nome",obj.getNome());
-        intent1.putExtra("descricao",obj.getDescricao());
         intent1.putExtra("status",obj.getStatus());
-        intent1.putExtra("posicao",posicao);
+        intent1.putExtra("posicao",indexObj);
         startActivityForResult(intent1,PEDIR);
     }
 
@@ -114,11 +157,11 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         if(requestCode == PEDIR){
             if(resultCode == SOLICITADO){
 
-                Objeto obj = new Objeto(data.getStringExtra("dono"),
+                Objeto obj = new Objeto(data.getStringExtra("idObjeto"),
+                        data.getStringExtra("dono"),
                         data.getStringExtra("nome"),
-                        data.getStringExtra("descricao"),
                         data.getStringExtra("status"),
-                        getDrawable(R.drawable.img));
+                        null);
                 objetos.set(data.getIntExtra("posicao",0),obj);
                 adapter.notifyItemChanged(data.getIntExtra("posicao",0));
 
@@ -128,12 +171,16 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
                 intent1.putExtra("donoAtual",donoAtual);
                 intent1.putExtra("dono",data.getStringExtra("dono"));
                 intent1.putExtra("nome",data.getStringExtra("nome"));
-                intent1.putExtra("descricao",data.getStringExtra("descricao"));
                 intent1.putExtra("status",data.getStringExtra("status"));
                 intent1.putExtra("periodo",data.getStringExtra("periodo"));
                 intent1.putExtra("local",data.getStringExtra("local"));
                 setResult(SOLICITADO,intent1);
             }
         }
+    }
+
+    public void listaVazia(){
+        tvObjVazio.setVisibility(View.VISIBLE);
+        lista.setVisibility(View.GONE);
     }
 }
