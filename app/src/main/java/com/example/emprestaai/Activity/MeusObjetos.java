@@ -31,7 +31,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     TextView tvObjeto;
     FloatingActionButton fabAdd, fabPesquisar, fabPedidos, fabSolicitacoes;
     int ADD = 1, VISUALIZAR=2, EXCLUIR = 3, EDITAR = 4, PEDIR = 5, SOLICITADO = 6;
-    String donoAtual, idDono;
+    String donoAtual, idObjeto,idDonoAtual;;
     ObjetoDAO objetoDAO;
 
     @Override
@@ -51,25 +51,27 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         lista.setHasFixedSize(true);
 
         donoAtual = intent.getStringExtra("donoAtual");
-        idDono = intent.getStringExtra("idDono");
+        idDonoAtual = intent.getStringExtra("idDonoAtual");
         layoutManager = new LinearLayoutManager(this);
         lista.setLayoutManager(layoutManager);
 
         objetos = new ArrayList<Objeto>();
         objetoDAO = new ObjetoDAO(com.example.emprestaai.Activity.MeusObjetos.this);
-        Cursor cursor = objetoDAO.procurarObjetosDono(idDono);
+        Cursor cursor = objetoDAO.procurarObjetosDono(idDonoAtual);
 
         if(cursor.getCount() == 0){
             isListavazia();
         }else{
             while(cursor.moveToNext()){
-                Objeto obj = new Objeto(idDono,donoAtual,
+                Objeto obj = new Objeto(Integer.toString(cursor.getInt(0)),
+                        donoAtual,
                         cursor.getString(2),
                         cursor.getString(3),
                         null);
                 objetos.add(obj);
             }
         }
+        cursor.close();
 
         adapter = new ObjetoAdapter(this,objetos);
         lista.setAdapter(adapter);
@@ -92,7 +94,8 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 //Todo: Ver se vale a pena passar os objetos ou pelo menos alterar
                 Intent intent1 = new Intent(MeusObjetos.this, PesquisarObjetos.class);
                 intent1.putExtra("donoAtual",donoAtual);
-                intent1.putExtra("idDono",idDono);
+                intent1.putExtra("idObjeto",idObjeto);
+                intent1.putExtra("idDonoAtual",idDonoAtual);
                 intent1.putStringArrayListExtra("donos",donos);
                 intent1.putStringArrayListExtra("nomes",nomes);
                 intent1.putStringArrayListExtra("status",status);
@@ -140,7 +143,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             public void onClick(View view) {
                 Intent intent1 = new Intent(MeusObjetos.this, NovoObjeto.class);
                 intent1.putExtra("donoAtual",donoAtual);
-                intent1.putExtra("idDono",idDono);
+                intent1.putExtra("idDonoAtual",idDonoAtual);
                 startActivityForResult(intent1,ADD);
             }
         });
@@ -153,23 +156,28 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ADD) {
             if (resultCode == RESULT_OK) {
-                idDono = data.getStringExtra("idDono");
+                donoAtual = data.getStringExtra("donoAtual");
+                idDonoAtual = data.getStringExtra("idDonoAtual");
 
-                objetoDAO.addObjeto(idDono,
+                idObjeto = objetoDAO.addObjeto(idDonoAtual,
                         data.getStringExtra("nome"),
                         data.getStringExtra("status"));
-
-                Objeto obj = new Objeto(idDono,
-                        donoAtual,
-                        data.getStringExtra("nome"),
-                        data.getStringExtra("status"),
-                        null);
-                objetos.add(obj);
-                adapter.notifyItemInserted(objetos.size()-1);
-                isListavazia();
+                if(!idObjeto.equals("-1")) {
+                    Objeto obj = new Objeto(idObjeto,
+                            donoAtual,
+                            data.getStringExtra("nome"),
+                            data.getStringExtra("status"),
+                            null);
+                    objetos.add(obj);
+                    adapter.notifyItemInserted(objetos.size() - 1);
+                    isListavazia();
+                }
             }
         }else if(requestCode == VISUALIZAR){
             if(resultCode == EXCLUIR){
+                donoAtual = data.getStringExtra("donoAtual");
+                idObjeto = data.getStringExtra("idObjeto");
+                idDonoAtual = data.getStringExtra("idDonoAtual");
                 int posi = data.getIntExtra("posicao",0);
                 objetos.remove(posi);
                 adapter.notifyItemRemoved(posi);
@@ -177,9 +185,14 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 isListavazia();
             }else if(resultCode == EDITAR){
                 donoAtual = data.getStringExtra("donoAtual");
-                idDono = data.getStringExtra("idDono");
+                idObjeto = data.getStringExtra("idObjeto");
+                idDonoAtual = data.getStringExtra("idDonoAtual");
+                objetoDAO.updateObjeto(idObjeto,
+                        idDonoAtual,
+                        data.getStringExtra("nome"),
+                        data.getStringExtra("status"));
 
-                Objeto obj = new Objeto(idDono,
+                Objeto obj = new Objeto(idObjeto,
                         donoAtual,
                         data.getStringExtra("nome"),
                         data.getStringExtra("status"),
@@ -190,7 +203,10 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         }else if(requestCode == PEDIR){
             if (resultCode == SOLICITADO){
                 donoAtual = data.getStringExtra("donoAtual");
-                Objeto obj = new Objeto(idDono,
+                idObjeto = data.getStringExtra("idObjeto");
+                idDonoAtual = data.getStringExtra("idDonoAtual");
+
+                Objeto obj = new Objeto(idObjeto,
                         data.getStringExtra("dono"),
                         data.getStringExtra("nome"),
                         data.getStringExtra("status"),
@@ -208,6 +224,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         Objeto obj = this.objetos.get(posicao);
         intent.putExtra("donoAtual",obj.getDono());
         intent.putExtra("idObjeto",obj.getIdObjeto());
+        intent.putExtra("idDonoAtual",idDonoAtual);
         intent.putExtra("nome",obj.getNome());
         intent.putExtra("status",obj.getStatus());
         intent.putExtra("posicao",posicao);

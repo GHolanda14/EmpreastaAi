@@ -52,6 +52,7 @@ public class VisualizarObjeto extends AppCompatActivity {
                 Intent intent1 = new Intent(VisualizarObjeto.this, NovoObjeto.class);
                 intent1.putExtra("donoAtual",intent.getStringExtra("donoAtual"));
                 intent1.putExtra("idObjeto",intent.getStringExtra("idObjeto"));
+                intent1.putExtra("idDonoAtual",intent.getStringExtra("idDonoAtual"));
                 intent1.putExtra("nome",tvNome.getText().toString());
                 intent1.putExtra("status",tvStatus.getText().toString());
                 intent1.putExtra("posicao",intent.getIntExtra("posicao",0));

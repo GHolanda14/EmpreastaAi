@@ -69,9 +69,11 @@ public class NovoObjeto extends AppCompatActivity {
                 }else {
                     Intent intent1 = new Intent();
                     intent1.putExtra("donoAtual",intent.getStringExtra("donoAtual"));
+                    intent1.putExtra("idDonoAtual",intent.getStringExtra("idDonoAtual"));
                     intent1.putExtra("idObjeto",intent.getStringExtra("idObjeto"));
                     intent1.putExtra("nome", tiNomeObj.getEditText().getText().toString());
                     intent1.putExtra("status", tgStatus.getText().toString());
+                    intent1.putExtra("posicao",intent.getIntExtra("posicao",0));
                     if(imageView.getDrawable() == null){
                         intent1.putExtra("url", "");//Valor padrão
                     }else{

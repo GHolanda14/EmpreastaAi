@@ -61,7 +61,7 @@ public class Login extends AppCompatActivity {
                     cursor.getString(3).toString().equals(senha)) {
                 Intent intent1 = new Intent(Login.this, MeusObjetos.class);
                 intent1.putExtra("donoAtual", cursor.getString(1).toString());
-                intent1.putExtra("idDono", Integer.toString(cursor.getInt(0)));
+                intent1.putExtra("idDonoAtual", Integer.toString(cursor.getInt(0)));
                 startActivity(intent1);
             } else {
                 tvErro.setText(getString(R.string.loginErrado));

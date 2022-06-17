@@ -45,7 +45,7 @@ public class ObjetoDAO extends SQLiteOpenHelper {
     }
 
     //Todo: Terminar a migração de Drawable para Bitmap
-    public void addObjeto(String idDono,String nome, String status){//, Bitmap imagem){
+    public String addObjeto(String idDono,String nome, String status){//, Bitmap imagem){
         SQLiteDatabase bd = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -58,17 +58,19 @@ public class ObjetoDAO extends SQLiteOpenHelper {
         if(resultado == -1) Toast.makeText(context, "Deu ruim", Toast.LENGTH_SHORT).show();
         else Toast.makeText(context, "Deu bom", Toast.LENGTH_SHORT).show();
 
+        return Long.toString(resultado);
     }
-
-    public void updateObjeto(String id, String idDono, String nome, String status){
+    //TOdo: ajeitar o editar no banco de dados
+    public void updateObjeto(String idObjeto, String dono, String nome, String status){
         SQLiteDatabase bd = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
-        cv.put(COLUNA_DONO,Integer.parseInt(idDono));
+
+        cv.put(COLUNA_DONO,Integer.parseInt(dono));
         cv.put(COLUNA_NOME,nome);
         cv.put(COLUNA_STATUS,status);
 
-        long resultado =bd.update(NOME_TABELA,cv,"id=?", new String[]{id});
+        long resultado =bd.update(NOME_TABELA,cv,"id=?", new String[]{idObjeto});
 
     }
 
