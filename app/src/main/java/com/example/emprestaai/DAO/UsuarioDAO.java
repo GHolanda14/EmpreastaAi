@@ -78,4 +78,15 @@ public class UsuarioDAO extends SQLiteOpenHelper {
         }
         return cursor;
     }
+
+    public Cursor getNome(int idDono) {
+        String query = "SELECT nome FROM " + NOME_TABELA+" WHERE id = " +idDono;
+        SQLiteDatabase bd = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if(bd != null){
+            cursor = bd.rawQuery(query,null);
+        }
+        return cursor;
+    }
 }

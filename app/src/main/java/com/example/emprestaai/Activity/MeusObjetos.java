@@ -3,7 +3,6 @@ package com.example.emprestaai.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emprestaai.Adapter.ObjetoAdapter;
 import com.example.emprestaai.DAO.ObjetoDAO;
+import com.example.emprestaai.DAO.PedidoDAO;
 import com.example.emprestaai.Model.Objeto;
 import com.example.emprestaai.Model.Pedido;
 import com.example.emprestaai.R;
@@ -24,7 +24,6 @@ import java.util.ArrayList;
 
 public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.ItemClicado {
     ArrayList<Objeto> objetos;
-    ArrayList<Pedido> meusPedidos;
     RecyclerView lista;
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
@@ -33,6 +32,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     int ADD = 1, VISUALIZAR=2, EXCLUIR = 3, EDITAR = 4, PEDIR = 5, SOLICITADO = 6;
     String donoAtual, idObjeto,idDonoAtual;;
     ObjetoDAO objetoDAO;
+    PedidoDAO pedidoDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,30 +75,14 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
 
         adapter = new ObjetoAdapter(this,objetos);
         lista.setAdapter(adapter);
-
-        meusPedidos = new ArrayList<Pedido>();
-
         //Todo: Solicitar ou recusar pedidos
 
         fabPesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> donos = new ArrayList<>();
-                ArrayList<String> nomes = new ArrayList<>();
-                ArrayList<String> status = new ArrayList<>();
-                for(Objeto obj : objetos){
-                    donos.add(obj.getDono());
-                    nomes.add(obj.getNome());
-                    status.add(obj.getStatus());
-                }
-                //Todo: Ver se vale a pena passar os objetos ou pelo menos alterar
                 Intent intent1 = new Intent(MeusObjetos.this, PesquisarObjetos.class);
                 intent1.putExtra("donoAtual",donoAtual);
-                intent1.putExtra("idObjeto",idObjeto);
                 intent1.putExtra("idDonoAtual",idDonoAtual);
-                intent1.putStringArrayListExtra("donos",donos);
-                intent1.putStringArrayListExtra("nomes",nomes);
-                intent1.putStringArrayListExtra("status",status);
                 startActivityForResult(intent1,PEDIR);
             }
         });
@@ -106,26 +90,11 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         fabPedidos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> donos = new ArrayList<>();
-                ArrayList<String> nomes = new ArrayList<>();
-                ArrayList<String> periodos = new ArrayList<>();
-                ArrayList<String> locais = new ArrayList<>();
-                ArrayList<String> status = new ArrayList<>();
-                for(Pedido pedido : meusPedidos){
-                    donos.add(pedido.getObjeto().getDono());
-                    nomes.add(pedido.getObjeto().getNome());
-                    periodos.add(pedido.getPeriodo());
-                    locais.add(pedido.getLocal());
-                    status.add(pedido.getObjeto().getStatus());
-                }
-
+                pedidoDAO = new PedidoDAO(com.example.emprestaai.Activity.MeusObjetos.this);
+                Cursor cursor1 = pedidoDAO.buscarPedidos(idDonoAtual);
                 Intent intent1 = new Intent(MeusObjetos.this, ListaPedidos.class);
+                intent1.putExtra("idDonoAtual",idDonoAtual);
                 intent1.putExtra("donoAtual",donoAtual);
-                intent1.putStringArrayListExtra("donos",donos);
-                intent1.putStringArrayListExtra("nomes",nomes);
-                intent1.putStringArrayListExtra("periodos",periodos);
-                intent1.putStringArrayListExtra("status",status);
-                intent1.putStringArrayListExtra("locais",locais);
                 startActivityForResult(intent1,PEDIR);
             }
         });
@@ -154,9 +123,11 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == ADD) {
             if (resultCode == RESULT_OK) {
                 donoAtual = data.getStringExtra("donoAtual");
+                idObjeto = data.getStringExtra("idObjeto");
                 idDonoAtual = data.getStringExtra("idDonoAtual");
 
                 idObjeto = objetoDAO.addObjeto(idDonoAtual,
@@ -178,22 +149,19 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 donoAtual = data.getStringExtra("donoAtual");
                 idObjeto = data.getStringExtra("idObjeto");
                 idDonoAtual = data.getStringExtra("idDonoAtual");
-                int posi = 0;
-                for(Objeto o : objetos){
-                    if(o.getIdObjeto().equals(idObjeto)){
-                        posi = objetos.indexOf(o);
-                        break;
-                    }
-                }
+
+                int posi = getIndexObj();
 
                 objetos.remove(posi);
                 adapter.notifyItemRemoved(posi);
                 Toast.makeText(this, "Objeto excluído com sucesso", Toast.LENGTH_SHORT).show();
                 isListavazia();
             }else if(resultCode == EDITAR){
+                int posi = getIndexObj();
                 donoAtual = data.getStringExtra("donoAtual");
                 idObjeto = data.getStringExtra("idObjeto");
                 idDonoAtual = data.getStringExtra("idDonoAtual");
+
                 objetoDAO.updateObjeto(idObjeto,
                         idDonoAtual,
                         data.getStringExtra("nome"),
@@ -204,8 +172,8 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                         data.getStringExtra("nome"),
                         data.getStringExtra("status"),
                         null);
-                objetos.set(data.getIntExtra("posicao",0),obj);
-                adapter.notifyItemChanged(data.getIntExtra("posicao",0));
+                objetos.set(posi,obj);
+                adapter.notifyItemChanged(posi);
             }
         }else if(requestCode == PEDIR){
             if (resultCode == SOLICITADO){
@@ -213,14 +181,23 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 idObjeto = data.getStringExtra("idObjeto");
                 idDonoAtual = data.getStringExtra("idDonoAtual");
 
-                Objeto obj = new Objeto(idObjeto,
+                String idPedido = pedidoDAO.addPedido(idObjeto,idDonoAtual,
                         data.getStringExtra("dono"),
-                        data.getStringExtra("nome"),
-                        data.getStringExtra("status"),
-                        null);
-                Pedido pedido = new Pedido(obj,data.getStringExtra("local"),data.getStringExtra("periodo"));
-                meusPedidos.add(pedido);
-                Log.d("msg","Adicionei o pedido, do dono: "+data.getStringExtra("dono"));
+                        data.getStringExtra("periodo"),
+                        data.getStringExtra("local"));
+
+                if(!idPedido.equals("-1")) {
+                    Objeto obj = new Objeto(idObjeto,
+                            data.getStringExtra("dono"),
+                            data.getStringExtra("nome"),
+                            data.getStringExtra("status"),
+                            null);
+                    Pedido pedido = new Pedido(idPedido, obj, data.getStringExtra("periodo"),data.getStringExtra("local"), idDonoAtual);
+                    fabPedidos.callOnClick();
+                }
+            }else if(resultCode == VISUALIZAR){
+                idDonoAtual = data.getStringExtra("idDonoAtual");
+                donoAtual = data.getStringExtra("donoAtual");
             }
         }
     }
@@ -229,12 +206,11 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     public void onItemClicked(int posicao, ArrayList<Objeto> objetos) {
         Intent intent = new Intent(MeusObjetos.this, VisualizarObjeto.class);
         Objeto obj = this.objetos.get(posicao);
-        intent.putExtra("donoAtual",obj.getDono());
+        intent.putExtra("donoAtual", donoAtual);
         intent.putExtra("idObjeto",obj.getIdObjeto());
         intent.putExtra("idDonoAtual",idDonoAtual);
         intent.putExtra("nome",obj.getNome());
         intent.putExtra("status",obj.getStatus());
-        intent.putExtra("posicao",posicao);
         startActivityForResult(intent,VISUALIZAR);
     }
     public void isListavazia(){
@@ -245,5 +221,14 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             lista.setVisibility(View.VISIBLE);
             tvObjeto.setVisibility(View.GONE);
         }
+    }
+
+    public int getIndexObj(){
+        for(Objeto o : objetos){
+            if(o.getIdObjeto().equals(idObjeto)){
+                return objetos.indexOf(o);
+            }
+        }
+        return 0;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.emprestaai.Activity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -10,6 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emprestaai.Adapter.PedidoAdapter;
+import com.example.emprestaai.DAO.ObjetoDAO;
+import com.example.emprestaai.DAO.PedidoDAO;
+import com.example.emprestaai.DAO.UsuarioDAO;
 import com.example.emprestaai.Model.Objeto;
 import com.example.emprestaai.Model.Pedido;
 import com.example.emprestaai.R;
@@ -22,6 +26,10 @@ public class ListaPedidos extends AppCompatActivity{
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
     TextView tvListPedidosVazio;
+    PedidoDAO pedidoDAO;
+    ObjetoDAO objetoDAO;
+    String idDonoAtual,donoAtual;
+    int VISUALIZAR = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,24 +41,39 @@ public class ListaPedidos extends AppCompatActivity{
         tvListPedidosVazio = (TextView) findViewById(R.id.tvListPedidosVazio);
         listaPedidos.setHasFixedSize(true);
 
+        idDonoAtual = intent.getStringExtra("idDonoAtual");
         layoutManager = new LinearLayoutManager(this);
         listaPedidos.setLayoutManager(layoutManager);
         //TODO: Conseguir a imagem aparecer aqui (Drawable.createFromPath(data.getStringExtra("url"))
         pedidos = new ArrayList<Pedido>();
-        ArrayList<String> donos = intent.getStringArrayListExtra("donos");
-        ArrayList<String> nomes = intent.getStringArrayListExtra("nomes");
-        ArrayList<String> periodos = intent.getStringArrayListExtra("periodos");
-        ArrayList<String> locais = intent.getStringArrayListExtra("locais");
-        ArrayList<String> status = intent.getStringArrayListExtra("status");
 
-        for(int i = 0; i < nomes.size(); i++){
-            Objeto obj = new Objeto("",donos.get(i),
-                    nomes.get(i),
-                    status.get(i),
-                    null);
-            pedidos.add(new Pedido(obj,locais.get(i),periodos.get(i)));
+        pedidoDAO = new PedidoDAO(com.example.emprestaai.Activity.ListaPedidos.this);
+        objetoDAO = new ObjetoDAO(com.example.emprestaai.Activity.ListaPedidos.this);
+        Cursor cursor = pedidoDAO.buscarPedidos(idDonoAtual);
+
+        if(cursor.getCount() != 0){
+            while (cursor.moveToNext()) {
+                Cursor cursor1 = objetoDAO.getObjeto(cursor.getInt(1));
+                cursor1.moveToNext();
+
+                UsuarioDAO usuarioDAO = new UsuarioDAO(ListaPedidos.this);
+                Cursor cursor2 = usuarioDAO.getNome(cursor1.getInt(1));
+                cursor2.moveToNext();
+                String nomeDono = cursor2.getString(0);
+                Objeto obj = new Objeto(Integer.toString(cursor1.getInt(0)),
+                        nomeDono,
+                        cursor1.getString(2),
+                        cursor1.getString(3),
+                        null);
+                Pedido pedido = new Pedido(Integer.toString(cursor.getInt(0)),
+                        obj,cursor.getString(4),
+                        cursor.getString(5),
+                        idDonoAtual);
+                pedidos.add(pedido);
+            }
         }
-
+        cursor.close();
+        setResult(VISUALIZAR,intent);
         if(pedidos.isEmpty()){
             tvListPedidosVazio.setVisibility(View.VISIBLE);
             listaPedidos.setVisibility(View.GONE);

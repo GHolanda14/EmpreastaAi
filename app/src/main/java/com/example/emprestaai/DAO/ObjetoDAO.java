@@ -97,7 +97,20 @@ public class ObjetoDAO extends SQLiteOpenHelper {
     }
 
     public Cursor procurarObjetos(String idDono){
+        //Todo: Consertar pedir Objetos
         String query = "SELECT * FROM "+NOME_TABELA+" WHERE "+COLUNA_DONO+ " != "+Integer.parseInt(idDono);
+        SQLiteDatabase bd = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if(bd != null){
+            cursor = bd.rawQuery(query,null);
+        }
+
+        return cursor;
+    }
+
+    public Cursor getObjeto(int idObjeto){
+        String query = "SELECT * FROM "+NOME_TABELA+" WHERE "+COLUNA_ID+ " = "+idObjeto;
         SQLiteDatabase bd = this.getReadableDatabase();
 
         Cursor cursor = null;
