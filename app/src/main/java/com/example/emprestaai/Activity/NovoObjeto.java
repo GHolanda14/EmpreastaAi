@@ -49,7 +49,6 @@ public class NovoObjeto extends AppCompatActivity {
         btnFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Todo: Pegar foto
                 ActivityCompat.requestPermissions(NovoObjeto.this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
                         PackageManager.PERMISSION_GRANTED);

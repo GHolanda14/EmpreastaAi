@@ -75,7 +75,6 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
 
         adapter = new ObjetoAdapter(this,objetos);
         lista.setAdapter(adapter);
-        //Todo: Solicitar ou recusar pedidos
 
         fabPesquisar.setOnClickListener(new View.OnClickListener() {
             @Override

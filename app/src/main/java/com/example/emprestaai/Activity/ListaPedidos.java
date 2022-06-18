@@ -44,7 +44,6 @@ public class ListaPedidos extends AppCompatActivity{
         idDonoAtual = intent.getStringExtra("idDonoAtual");
         layoutManager = new LinearLayoutManager(this);
         listaPedidos.setLayoutManager(layoutManager);
-        //TODO: Conseguir a imagem aparecer aqui (Drawable.createFromPath(data.getStringExtra("url"))
         pedidos = new ArrayList<Pedido>();
 
         pedidoDAO = new PedidoDAO(com.example.emprestaai.Activity.ListaPedidos.this);
