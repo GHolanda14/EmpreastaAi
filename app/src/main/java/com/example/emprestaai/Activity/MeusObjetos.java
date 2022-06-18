@@ -178,10 +178,17 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 donoAtual = data.getStringExtra("donoAtual");
                 idObjeto = data.getStringExtra("idObjeto");
                 idDonoAtual = data.getStringExtra("idDonoAtual");
-                int posi = data.getIntExtra("posicao",0);
+                int posi = 0;
+                for(Objeto o : objetos){
+                    if(o.getIdObjeto().equals(idObjeto)){
+                        posi = objetos.indexOf(o);
+                        break;
+                    }
+                }
+
                 objetos.remove(posi);
                 adapter.notifyItemRemoved(posi);
-                Toast.makeText(this, "Objeto excluído", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Objeto excluído com sucesso", Toast.LENGTH_SHORT).show();
                 isListavazia();
             }else if(resultCode == EDITAR){
                 donoAtual = data.getStringExtra("donoAtual");

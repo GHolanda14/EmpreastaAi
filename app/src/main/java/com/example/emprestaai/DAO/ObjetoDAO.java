@@ -60,7 +60,7 @@ public class ObjetoDAO extends SQLiteOpenHelper {
 
         return Long.toString(resultado);
     }
-    //TOdo: ajeitar o editar no banco de dados
+
     public void updateObjeto(String idObjeto, String dono, String nome, String status){
         SQLiteDatabase bd = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -72,6 +72,16 @@ public class ObjetoDAO extends SQLiteOpenHelper {
 
         long resultado =bd.update(NOME_TABELA,cv,"id=?", new String[]{idObjeto});
 
+    }
+
+    public boolean deleteObjeto(String idObjeto){
+        SQLiteDatabase bd = this.getWritableDatabase();
+        long resultado = bd.delete(NOME_TABELA,"id=?", new String[]{idObjeto});
+        if(resultado == -1){
+            Toast.makeText(context, "Erro ao remover objeto", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     public Cursor procurarObjetosDono(String idDono){
