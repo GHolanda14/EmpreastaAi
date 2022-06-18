@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,7 +34,7 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
     RecyclerView.LayoutManager layoutManager;
     TextView tvObjVazio;
     int PEDIR = 5, SOLICITADO = 6;
-    String donoAtual;
+    String idDonoAtual, donoAtual;
     ObjetoDAO objetoDAO;
     UsuarioDAO usuarioDAO;
 
@@ -49,19 +48,12 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         setSupportActionBar(binding.toolbar);
 
         Intent intent = getIntent();
-        donoAtual = "Gabriel Holanda";
-//        donoAtual = intent.getStringExtra("donoAtual");
-//
-//        ArrayList<String> donos = intent.getStringArrayListExtra("donos");
-//        ArrayList<String> nomes = intent.getStringArrayListExtra("nomes");
-//        ArrayList<String> status = intent.getStringArrayListExtra("status");
+        idDonoAtual = intent.getStringExtra("idDonoAtual");
+        donoAtual = intent.getStringExtra("donoAtual");
 
         objetos = new ArrayList<Objeto>();
         objetoDAO = new ObjetoDAO(com.example.emprestaai.Activity.PesquisarObjetos.this);
-//        objetos.add(new Objeto("Pedro","Escova",(getString(R.string.tgStatusOn)), null));
-//        objetos.add(new Objeto("Pedro","Carteira",getString(R.string.tgStatusOff),null));
-//        objetos.add(new Objeto("Josué","Fone",getString(R.string.tgStatusOn),null));
-        carregarObjetos(intent.getStringExtra("idDono"));
+        carregarObjetos(intent.getStringExtra("idDonoAtual"));
 
         tvObjVazio = (TextView) findViewById(R.id.tvObjVazio);
         lista = (RecyclerView) findViewById(R.id.rvPedidos);
@@ -122,7 +114,7 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         ArrayList<Objeto> objFiltrados = new ArrayList<Objeto>();
 
         for(Objeto objeto : objetos){
-            if(objeto.getNome().toLowerCase().contains(texto) && !objeto.getDono().equals(donoAtual)){
+            if(objeto.getNome().toLowerCase().contains(texto)){
                 objFiltrados.add(new Objeto(objeto.getIdObjeto(),objeto.getDono(),objeto.getNome(),objeto.getStatus(),objeto.getImagem()));
             }
         }
@@ -134,47 +126,34 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
     public void onItemClicked(int posicao, ArrayList<Objeto> listaObjetos) {
         Intent intent1 = new Intent(PesquisarObjetos.this, AlugarObjeto.class);
         Objeto obj = listaObjetos.get(posicao);
-        int indexObj = 0;
-        //TOdo: aprimorar isso aqui vei
-        for(Objeto o : objetos){
-            if(o.getIdObjeto().equals(obj.getIdObjeto())) {
-                indexObj = objetos.indexOf(o);
-                break;
-            }
-        }
-
-        //donoatual é oto
         intent1.putExtra("dono",obj.getDono());
         intent1.putExtra("nome",obj.getNome());
         intent1.putExtra("status",obj.getStatus());
-        intent1.putExtra("posicao",indexObj);
+        intent1.putExtra("idObjeto",obj.getIdObjeto());
+        intent1.putExtra("idDonoAtual",idDonoAtual);
+        intent1.putExtra("donoAtual",donoAtual);
         startActivityForResult(intent1,PEDIR);
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PEDIR){
             if(resultCode == SOLICITADO){
-
-                Objeto obj = new Objeto(data.getStringExtra("idObjeto"),
-                        data.getStringExtra("dono"),
-                        data.getStringExtra("nome"),
-                        data.getStringExtra("status"),
-                        null);
-                objetos.set(data.getIntExtra("posicao",0),obj);
-                adapter.notifyItemChanged(data.getIntExtra("posicao",0));
-
-                Toast.makeText(this, "Objeto solicitado com sucesso!", Toast.LENGTH_SHORT).show();
-
                 Intent intent1 = new Intent();
-                intent1.putExtra("donoAtual",donoAtual);
+                intent1.putExtra("idDonoAtual",data.getStringExtra("idDonoAtual"));
+                intent1.putExtra("idObjeto",data.getStringExtra("idObjeto"));
+                intent1.putExtra("donoAtual",data.getStringExtra("donoAtual"));
                 intent1.putExtra("dono",data.getStringExtra("dono"));
                 intent1.putExtra("nome",data.getStringExtra("nome"));
                 intent1.putExtra("status",data.getStringExtra("status"));
                 intent1.putExtra("periodo",data.getStringExtra("periodo"));
                 intent1.putExtra("local",data.getStringExtra("local"));
+
                 setResult(SOLICITADO,intent1);
+                PesquisarObjetos.this.finish();
             }
         }
     }

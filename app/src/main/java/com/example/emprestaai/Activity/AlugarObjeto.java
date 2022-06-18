@@ -81,16 +81,18 @@ public class AlugarObjeto extends AppCompatActivity {
         btnSolicitar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Todo: Remover comentário
 //                if(tiLocal.getEditText().getText().toString().isEmpty() ||
 //                        tiData.getText().toString().isEmpty()){
 //                    Toast.makeText(AlugarObjeto.this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show();
 //                }else{
-                    Intent intent1 = new Intent(AlugarObjeto.this, ListaPedidos.class);
+                    Intent intent1 = new Intent();
+                    intent1.putExtra("idDonoAtual",intent.getStringExtra("idDonoAtual"));
                     intent1.putExtra("donoAtual",intent.getStringExtra("donoAtual"));
                     intent1.putExtra("dono",tvDonoObj.getText().toString().trim());
-                    intent1.putExtra("posicao", intent.getIntExtra("posicao",0));
+                    intent1.putExtra("idObjeto", intent.getStringExtra("idObjeto"));
                     intent1.putExtra("nome",tvNomeAlugarObj.getText().toString().trim());
-                    intent1.putExtra("status","Solicitado");
+                    intent1.putExtra("status",getString(R.string.hSolicitado));
                     intent1.putExtra("periodo",tiData.getText().toString());
                     intent1.putExtra("local",tiLocal.getEditText().getText().toString());
                     setResult(SOLICITADO,intent1);
@@ -98,7 +100,5 @@ public class AlugarObjeto extends AppCompatActivity {
                 //}
             }
         });
-
-        //TODO: Página com minhas solicitações e solicitações pendentes
     }
 }

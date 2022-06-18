@@ -42,6 +42,8 @@ public class VisualizarObjeto extends AppCompatActivity {
                     ObjetoDAO objetoDAO = new ObjetoDAO(VisualizarObjeto.this);
                     Intent ints = new Intent();
                     ints.putExtra("idObjeto", intent.getStringExtra("idObjeto"));
+                    ints.putExtra("idDonoAtual", intent.getStringExtra("idDonoAtual"));
+                    ints.putExtra("donoAtual", intent.getStringExtra("donoAtual     "));
                     if(objetoDAO.deleteObjeto(intent.getStringExtra("idObjeto"))){
                         setResult(EXCLUIR,ints);
                         VisualizarObjeto.this.finish();
@@ -59,7 +61,6 @@ public class VisualizarObjeto extends AppCompatActivity {
                 intent1.putExtra("idDonoAtual",intent.getStringExtra("idDonoAtual"));
                 intent1.putExtra("nome",tvNome.getText().toString());
                 intent1.putExtra("status",tvStatus.getText().toString());
-                intent1.putExtra("posicao",intent.getIntExtra("posicao",0));
                 startActivityForResult(intent1,EDITAR);
                 setResult(EDITAR,intent1);
             }

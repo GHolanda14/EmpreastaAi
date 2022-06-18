@@ -49,6 +49,7 @@ public class NovoObjeto extends AppCompatActivity {
         btnFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Todo: Pegar foto
                 ActivityCompat.requestPermissions(NovoObjeto.this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
                         PackageManager.PERMISSION_GRANTED);
@@ -73,7 +74,6 @@ public class NovoObjeto extends AppCompatActivity {
                     intent1.putExtra("idObjeto",intent.getStringExtra("idObjeto"));
                     intent1.putExtra("nome", tiNomeObj.getEditText().getText().toString());
                     intent1.putExtra("status", tgStatus.getText().toString());
-                    intent1.putExtra("posicao",intent.getIntExtra("posicao",0));
                     if(imageView.getDrawable() == null){
                         intent1.putExtra("url", "");//Valor padrão
                     }else{

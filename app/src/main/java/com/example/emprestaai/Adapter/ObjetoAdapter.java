@@ -57,7 +57,6 @@ public class ObjetoAdapter extends RecyclerView.Adapter<ObjetoAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ObjetoAdapter.ViewHolder holder, int position) {
         holder.itemView.setTag(objetos.get(position));
-
         holder.tvNome.setText(objetos.get(position).getNome());
         holder.tvStatus.setText(objetos.get(position).getStatus());
     }
