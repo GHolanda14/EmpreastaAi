@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -26,10 +25,9 @@ public class UsuarioDAO extends SQLiteOpenHelper {
         super(context, NOME_BD, null, VERSAO_BD);
         this.context = context;
     }
-        //TODO: DAO Pedido, Solicitacao
+        //TODO: DAO Solicitacao?
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("Msg","Criei o usuario");
         String query = "CREATE TABLE " + NOME_TABELA +
                 "(" + COLUNA_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, "+
                 COLUNA_NOME + " TEXT," +

@@ -58,7 +58,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         objetos = new ArrayList<Objeto>();
         objetoDAO = new ObjetoDAO(com.example.emprestaai.Activity.MeusObjetos.this);
         Cursor cursor = objetoDAO.procurarObjetosDono(idDonoAtual);
-
+        //Carregando meus objetos do banco
         if(cursor.getCount() == 0){
             isListavazia();
         }else{
@@ -102,10 +102,11 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         fabSolicitacoes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(MeusObjetos.this, Solicitacoes.class);
-                startActivity(intent1);
+                //Intent intent1 = new Intent(MeusObjetos.this, Solicitacoes.class);
+                //startActivity(intent1);
             }
         });
+        fabSolicitacoes.setVisibility(View.GONE);
 
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override

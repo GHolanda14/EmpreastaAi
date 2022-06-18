@@ -50,16 +50,9 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         Intent intent = getIntent();
         idDonoAtual = intent.getStringExtra("idDonoAtual");
         donoAtual = intent.getStringExtra("donoAtual");
-//
-//        ArrayList<String> donos = intent.getStringArrayListExtra("donos");
-//        ArrayList<String> nomes = intent.getStringArrayListExtra("nomes");
-//        ArrayList<String> status = intent.getStringArrayListExtra("status");
 
         objetos = new ArrayList<Objeto>();
         objetoDAO = new ObjetoDAO(com.example.emprestaai.Activity.PesquisarObjetos.this);
-//        objetos.add(new Objeto("Pedro","Escova",(getString(R.string.tgStatusOn)), null));
-//        objetos.add(new Objeto("Pedro","Carteira",getString(R.string.tgStatusOff),null));
-//        objetos.add(new Objeto("Josué","Fone",getString(R.string.tgStatusOn),null));
         carregarObjetos(intent.getStringExtra("idDonoAtual"));
 
         tvObjVazio = (TextView) findViewById(R.id.tvObjVazio);
@@ -133,7 +126,6 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
     public void onItemClicked(int posicao, ArrayList<Objeto> listaObjetos) {
         Intent intent1 = new Intent(PesquisarObjetos.this, AlugarObjeto.class);
         Objeto obj = listaObjetos.get(posicao);
-        //donoatual é oto
         intent1.putExtra("dono",obj.getDono());
         intent1.putExtra("nome",obj.getNome());
         intent1.putExtra("status",obj.getStatus());

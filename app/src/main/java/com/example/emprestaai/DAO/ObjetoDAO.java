@@ -97,7 +97,6 @@ public class ObjetoDAO extends SQLiteOpenHelper {
     }
 
     public Cursor procurarObjetos(String idDono){
-        //Todo: Consertar pedir Objetos
         String query = "SELECT * FROM "+NOME_TABELA+" WHERE "+COLUNA_DONO+ " != "+Integer.parseInt(idDono);
         SQLiteDatabase bd = this.getReadableDatabase();
 

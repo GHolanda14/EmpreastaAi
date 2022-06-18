@@ -100,7 +100,5 @@ public class AlugarObjeto extends AppCompatActivity {
                 //}
             }
         });
-
-        //TODO: Página com minhas solicitações e solicitações pendentes
     }
 }

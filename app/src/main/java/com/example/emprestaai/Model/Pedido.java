@@ -1,8 +1,6 @@
 package com.example.emprestaai.Model;
 
-import java.io.Serializable;
-
-public class Pedido implements Serializable {
+public class Pedido{
     String idPedido;
     Objeto objeto;
     String local;

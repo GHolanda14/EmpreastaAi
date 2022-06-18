@@ -2,11 +2,7 @@ package com.example.emprestaai.Model;
 
 import android.graphics.Bitmap;
 
-import java.io.Serializable;
-
-public class Objeto implements Serializable {
-    /*dono na verdade é o nome do Dono
-     */
+public class Objeto{
     private String idObjeto;
     private String dono;
     private String nome;

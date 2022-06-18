@@ -17,9 +17,6 @@
         android:theme="@style/Theme.EmprestaAi"
         tools:targetApi="31">
         <activity
-            android:name=".Activity.Solicitacoes"
-            android:exported="false" />
-        <activity
             android:name=".Activity.ListaPedidos"
             android:exported="false"
             android:label="@string/activityListaPedidos" />
@@ -61,6 +58,10 @@
         </activity>
         <activity
             android:name=".Activity.Login"
+            android:exported="false"
+            android:label="@string/activityLogin" />
+        <activity
+            android:name=".Activity.Solicitacoes"
             android:exported="false"
             android:label="@string/activityLogin" />
     </application>
