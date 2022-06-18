@@ -3,16 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_alugar_objeto.xml" value="1.0" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/drawable/ic_novoObjeto_foreground.xml" value="0.2265" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/drawable/ic_pedirObjetos_foreground.xml" value="0.2265" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/drawable/ic_solicitacoes_background.xml" value="0.1" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/drawable/ic_solicitacoes_foreground.xml" value="0.2265" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_alugar_objeto.xml" value="0.33748055987558323" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_cadastro.xml" value="0.22780797101449277" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_cadastroo.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_lista_pedidos.xml" value="0.11302083333333333" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_login.xml" value="0.16041666666666668" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_main2.xml" value="0.16041666666666668" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_menu.xml" value="0.22826086956521738" />
-        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_meus_objetos.xml" value="0.25" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_meus_objetos.xml" value="0.23333333333333334" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_novo_objeto.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_pesquisar_objetos.xml" value="0.2" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_solicitacoes.xml" value="0.11302083333333333" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_solicitar_objeto.xml" value="0.1" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_visualizar_objeto.xml" value="0.16041666666666668" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/cadastro.xml" value="0.22826086956521738" />
@@ -26,9 +32,11 @@
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/fragment_menu.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/fragment_second.xml" value="0.16041666666666668" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/lista_itens.xml" value="0.264" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/lista_pedidos.xml" value="0.31712962962962965" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/login.xml" value="0.159375" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/menu.xml" value="0.159375" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/teste.xml" value="0.1721311475409836" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/mipmap-anydpi-v26/ic_novoObjeto.xml" value="0.124" />
       </map>
     </option>
   </component>
@@ -37,5 +45,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.31712962962962965" />
+      </ProjectState>
+    </option>
   </component>
 </project>

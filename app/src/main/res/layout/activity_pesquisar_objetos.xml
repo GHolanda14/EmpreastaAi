@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PesquisarObjetos">
+    tools:context=".Activity.PesquisarObjetos">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -28,11 +28,21 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvObjetos"
+        android:id="@+id/rvPedidos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="65dp">
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="10dp">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/tvObjVazio"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/tvVazio"
+        android:visibility="gone" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

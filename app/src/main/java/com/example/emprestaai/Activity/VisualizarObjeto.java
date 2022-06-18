@@ -1,4 +1,4 @@
-package com.example.emprestaai;
+package com.example.emprestaai.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,9 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.emprestaai.DAO.ObjetoDAO;
+import com.example.emprestaai.R;
+
 public class VisualizarObjeto extends AppCompatActivity {
     TextView tvNome, tvDescricao,tvStatus;
     Button btnEditar, btnExcluir;
@@ -20,7 +23,6 @@ public class VisualizarObjeto extends AppCompatActivity {
         setContentView(R.layout.activity_visualizar_objeto);
 
         tvNome = (TextView) findViewById(R.id.tvNomeAlugarObj);
-        tvDescricao = (TextView) findViewById(R.id.tvDescricaoAlugarObj);
         tvStatus = (TextView) findViewById(R.id.tvStatusVisuObj);
         btnEditar = (Button) findViewById(R.id.btnEditar);
         btnExcluir = (Button) findViewById(R.id.btnStatus);
@@ -28,7 +30,6 @@ public class VisualizarObjeto extends AppCompatActivity {
         Intent intent = getIntent();
 
         tvNome.setText(intent.getStringExtra("nome"));
-        tvDescricao.setText(intent.getStringExtra("descricao"));
         String status = intent.getStringExtra("status");
         tvStatus.setText(status);
 
@@ -38,10 +39,13 @@ public class VisualizarObjeto extends AppCompatActivity {
                 if(tvStatus.getText().toString().equals(getString(R.string.tgStatusOff))){
                     Toast.makeText(VisualizarObjeto.this, "Não é possível deletar um objeto que está emprestado.", Toast.LENGTH_LONG).show();
                 }else{
-                    Intent ints = new Intent(VisualizarObjeto.this,com.example.emprestaai.MeusObjetos.class);
-                    ints.putExtra("posicao",intent.getIntExtra("posicao",0));
-                    setResult(EXCLUIR,ints);
-                    VisualizarObjeto.this.finish();
+                    ObjetoDAO objetoDAO = new ObjetoDAO(VisualizarObjeto.this);
+                    Intent ints = new Intent();
+                    ints.putExtra("idObjeto", intent.getStringExtra("idObjeto"));
+                    if(objetoDAO.deleteObjeto(intent.getStringExtra("idObjeto"))){
+                        setResult(EXCLUIR,ints);
+                        VisualizarObjeto.this.finish();
+                    }
                 }
             }
         });
@@ -49,10 +53,11 @@ public class VisualizarObjeto extends AppCompatActivity {
         btnEditar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(VisualizarObjeto.this, com.example.emprestaai.NovoObjeto.class);
+                Intent intent1 = new Intent(VisualizarObjeto.this, NovoObjeto.class);
                 intent1.putExtra("donoAtual",intent.getStringExtra("donoAtual"));
+                intent1.putExtra("idObjeto",intent.getStringExtra("idObjeto"));
+                intent1.putExtra("idDonoAtual",intent.getStringExtra("idDonoAtual"));
                 intent1.putExtra("nome",tvNome.getText().toString());
-                intent1.putExtra("descricao",tvDescricao.getText().toString());
                 intent1.putExtra("status",tvStatus.getText().toString());
                 intent1.putExtra("posicao",intent.getIntExtra("posicao",0));
                 startActivityForResult(intent1,EDITAR);
@@ -67,7 +72,6 @@ public class VisualizarObjeto extends AppCompatActivity {
         if(requestCode == EDITAR){
             if(resultCode == RESULT_OK){
                 tvNome.setText(data.getStringExtra("nome"));
-                tvDescricao.setText(data.getStringExtra("descricao"));
                 String status = data.getStringExtra("status");
                 tvStatus.setText(status);
                 setResult(EDITAR,data);

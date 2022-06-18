@@ -1,63 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MeusObjetos">
+    tools:context=".Activity.MeusObjetos">
 
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="70dp"
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvObjetos"
+            android:id="@+id/rvPedidos"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
         </androidx.recyclerview.widget.RecyclerView>
-
-        <TextView
-            android:id="@+id/tvObjeto"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/tvVazio"
-            android:textColor="#D31515"
-            android:textSize="34sp" />
-
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:layout_marginEnd="10dp"
-        android:contentDescription="add"
-        android:src="@android:drawable/ic_input_add"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="1.0" />
+    <TextView
+        android:id="@+id/tvObjeto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/tvVazio"
+        android:textColor="#D31515"
+        android:textSize="34sp" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/pesquisar"
-        android:layout_width="wrap_content"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:contentDescription="@string/hPesquisa"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.972"
-        app:srcCompat="@android:drawable/ic_menu_search" />
+        android:layout_alignParentBottom="true"
+        android:minHeight="70dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center|center_horizontal|top"
+            android:gravity="center|top"
+            android:orientation="horizontal">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/pesquisar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:clickable="true"
+                android:contentDescription="@string/activityPesquisar"
+                android:focusable="true"
+                android:src="@drawable/ic_pedir_objetos_foreground"
+                app:fabCustomSize="56dp"
+                app:maxImageSize="90dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/meusPedidos"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1"
+                android:clickable="true"
+
+                android:contentDescription="@string/activityListaPedidos"
+                android:focusable="true"
+                android:foregroundGravity="top"
+                android:src="@drawable/ic_pedidos_foreground"
+                app:fabCustomSize="56dp"
+                app:maxImageSize="95dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/solicitacoes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:contentDescription="@string/activityAlugarObjeto"
+                android:focusable="true"
+                android:scaleType="center"
+                android:src="@drawable/ic_solicitacoes_foreground"
+                app:fabCustomSize="56dp"
+                app:maxImageSize="90dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:clickable="true"
+                android:contentDescription="@string/activityNovoObjeto"
+                android:focusable="true"
+                android:src="@drawable/ic_novo_objeto_foreground"
+                app:fabCustomSize="56dp"
+                app:maxImageSize="90dp" />
+        </LinearLayout>
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+</RelativeLayout>

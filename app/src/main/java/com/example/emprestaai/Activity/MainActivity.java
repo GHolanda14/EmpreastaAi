@@ -1,4 +1,4 @@
-package com.example.emprestaai;
+package com.example.emprestaai.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.emprestaai.R;
 
 public class MainActivity extends AppCompatActivity {
     Button btnLogin, btnCadastro;
@@ -20,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, com.example.emprestaai.Login.class);
+                Intent intent = new Intent(MainActivity.this, Login.class);
                 startActivity(intent);
             }
         });
@@ -28,9 +30,8 @@ public class MainActivity extends AppCompatActivity {
         btnCadastro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, com.example.emprestaai.Cadastro.class);
+                Intent intent = new Intent(MainActivity.this, Cadastro.class);
                 startActivity(intent);
-                MainActivity.this.finish();
             }
         });
     }
