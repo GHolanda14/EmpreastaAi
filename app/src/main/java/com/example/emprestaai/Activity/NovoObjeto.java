@@ -71,7 +71,8 @@ public class NovoObjeto extends AppCompatActivity {
             public void onClick(View v) {
                 if(tiNomeObj.getEditText().getText().toString().isEmpty()){
                     Toast.makeText(NovoObjeto.this, "Preencha o nome!", Toast.LENGTH_SHORT).show();
-                }else {
+                }//Todo: testar se esta sem foto
+                else {
                     Intent intent1 = new Intent();
                     intent1.putExtra("idObjeto",intent.getStringExtra("idObjeto"));
                     intent1.putExtra("nome", tiNomeObj.getEditText().getText().toString());
