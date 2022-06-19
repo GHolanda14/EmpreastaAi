@@ -1,9 +1,12 @@
 package com.example.emprestaai.Activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,9 +16,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.emprestaai.DAO.ObjetoDAO;
 import com.example.emprestaai.R;
 
+import java.io.ByteArrayOutputStream;
+
 public class VisualizarObjeto extends AppCompatActivity {
     TextView tvNome, tvDescricao,tvStatus;
     Button btnEditar, btnExcluir;
+    ImageView ivObjetoVisuObj;
     int EXCLUIR = 3, EDITAR = 4;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +30,7 @@ public class VisualizarObjeto extends AppCompatActivity {
 
         tvNome = (TextView) findViewById(R.id.tvNomeAlugarObj);
         tvStatus = (TextView) findViewById(R.id.tvStatusVisuObj);
+        ivObjetoVisuObj = (ImageView) findViewById(R.id.ivObjetoAluObj);
         btnEditar = (Button) findViewById(R.id.btnEditar);
         btnExcluir = (Button) findViewById(R.id.btnStatus);
 
@@ -31,6 +38,7 @@ public class VisualizarObjeto extends AppCompatActivity {
 
         tvNome.setText(intent.getStringExtra("nome"));
         String status = intent.getStringExtra("status");
+        ivObjetoVisuObj.setImageBitmap(getImage(intent.getByteArrayExtra("imagem")));
         tvStatus.setText(status);
 
         btnExcluir.setOnClickListener(new View.OnClickListener() {
@@ -42,8 +50,6 @@ public class VisualizarObjeto extends AppCompatActivity {
                     ObjetoDAO objetoDAO = new ObjetoDAO(VisualizarObjeto.this);
                     Intent ints = new Intent();
                     ints.putExtra("idObjeto", intent.getStringExtra("idObjeto"));
-                    ints.putExtra("idDonoAtual", intent.getStringExtra("idDonoAtual"));
-                    ints.putExtra("donoAtual", intent.getStringExtra("donoAtual     "));
                     if(objetoDAO.deleteObjeto(intent.getStringExtra("idObjeto"))){
                         setResult(EXCLUIR,ints);
                         VisualizarObjeto.this.finish();
@@ -56,11 +62,10 @@ public class VisualizarObjeto extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(VisualizarObjeto.this, NovoObjeto.class);
-                intent1.putExtra("donoAtual",intent.getStringExtra("donoAtual"));
                 intent1.putExtra("idObjeto",intent.getStringExtra("idObjeto"));
-                intent1.putExtra("idDonoAtual",intent.getStringExtra("idDonoAtual"));
                 intent1.putExtra("nome",tvNome.getText().toString());
                 intent1.putExtra("status",tvStatus.getText().toString());
+                intent1.putExtra("imagem",intent.getByteArrayExtra("imagem"));
                 startActivityForResult(intent1,EDITAR);
                 setResult(EDITAR,intent1);
             }
@@ -75,6 +80,7 @@ public class VisualizarObjeto extends AppCompatActivity {
                 tvNome.setText(data.getStringExtra("nome"));
                 String status = data.getStringExtra("status");
                 tvStatus.setText(status);
+                ivObjetoVisuObj.setImageBitmap(getImage(data.getByteArrayExtra("imagem")));
                 setResult(EDITAR,data);
             }else if(resultCode == RESULT_CANCELED){
                 setResult(RESULT_CANCELED);
@@ -82,4 +88,13 @@ public class VisualizarObjeto extends AppCompatActivity {
             }
         }
     }
+    public Bitmap getImage(byte[] image) {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
+    }
+    public byte[] getBytes(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        return stream.toByteArray();
+    }
+
 }

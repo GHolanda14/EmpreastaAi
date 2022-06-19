@@ -2,6 +2,8 @@ package com.example.emprestaai.Activity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -28,7 +30,7 @@ public class ListaPedidos extends AppCompatActivity{
     TextView tvListPedidosVazio;
     PedidoDAO pedidoDAO;
     ObjetoDAO objetoDAO;
-    String idDonoAtual,donoAtual;
+    String idDonoAtual;
     int VISUALIZAR = 2;
 
     @Override
@@ -44,7 +46,6 @@ public class ListaPedidos extends AppCompatActivity{
         idDonoAtual = intent.getStringExtra("idDonoAtual");
         layoutManager = new LinearLayoutManager(this);
         listaPedidos.setLayoutManager(layoutManager);
-        //TODO: Conseguir a imagem aparecer aqui (Drawable.createFromPath(data.getStringExtra("url"))
         pedidos = new ArrayList<Pedido>();
 
         pedidoDAO = new PedidoDAO(com.example.emprestaai.Activity.ListaPedidos.this);
@@ -64,7 +65,7 @@ public class ListaPedidos extends AppCompatActivity{
                         nomeDono,
                         cursor1.getString(2),
                         cursor1.getString(3),
-                        null);
+                        getImage(cursor1.getBlob(4)));
                 Pedido pedido = new Pedido(Integer.toString(cursor.getInt(0)),
                         obj,cursor.getString(4),
                         cursor.getString(5),
@@ -74,6 +75,7 @@ public class ListaPedidos extends AppCompatActivity{
         }
         cursor.close();
         setResult(VISUALIZAR,intent);
+
         if(pedidos.isEmpty()){
             tvListPedidosVazio.setVisibility(View.VISIBLE);
             listaPedidos.setVisibility(View.GONE);
@@ -84,5 +86,9 @@ public class ListaPedidos extends AppCompatActivity{
 
         adapter = new PedidoAdapter(this,pedidos);
         listaPedidos.setAdapter(adapter);
+    }
+
+    public Bitmap getImage(byte[] image) {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 }

@@ -2,6 +2,8 @@ package com.example.emprestaai.Activity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
@@ -21,6 +23,7 @@ import com.example.emprestaai.Model.Objeto;
 import com.example.emprestaai.R;
 import com.example.emprestaai.databinding.ActivityPesquisarObjetosBinding;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter.ItemClicado{
@@ -49,14 +52,14 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
 
         Intent intent = getIntent();
         idDonoAtual = intent.getStringExtra("idDonoAtual");
-        donoAtual = intent.getStringExtra("donoAtual");
+        tvObjVazio = (TextView) findViewById(R.id.tvObjVazio);
+        lista = (RecyclerView) findViewById(R.id.rvPedidos);
 
         objetos = new ArrayList<Objeto>();
         objetoDAO = new ObjetoDAO(com.example.emprestaai.Activity.PesquisarObjetos.this);
         carregarObjetos(intent.getStringExtra("idDonoAtual"));
 
-        tvObjVazio = (TextView) findViewById(R.id.tvObjVazio);
-        lista = (RecyclerView) findViewById(R.id.rvPedidos);
+
         lista.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         lista.setLayoutManager(layoutManager);
@@ -94,6 +97,7 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         if(cursor.getCount() == 0){
             listaVazia();
         }else{
+            listaCheia();
             while (cursor.moveToNext()){
                 String nomeDono = "";
                 for(Pair<Integer,String> par : pares){
@@ -105,11 +109,21 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
                 objetos.add(new Objeto(Integer.toString(cursor.getInt(0)),
                         nomeDono,
                         cursor.getString(2),
-                        cursor.getString(3),null));
+                        cursor.getString(3),
+                        getImage(cursor.getBlob(4))));
             }
         }
+        cursor.close();
+        cursor2.close();
     }
-
+    public Bitmap getImage(byte[] image) {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
+    }
+    public byte[] getBytes(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        return stream.toByteArray();
+    }
     public void buscaAoDigitar(String texto){
         ArrayList<Objeto> objFiltrados = new ArrayList<Objeto>();
 
@@ -130,8 +144,7 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         intent1.putExtra("nome",obj.getNome());
         intent1.putExtra("status",obj.getStatus());
         intent1.putExtra("idObjeto",obj.getIdObjeto());
-        intent1.putExtra("idDonoAtual",idDonoAtual);
-        intent1.putExtra("donoAtual",donoAtual);
+        intent1.putExtra("imagem",getBytes(obj.getImagem()));
         startActivityForResult(intent1,PEDIR);
     }
 
@@ -143,14 +156,13 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         if(requestCode == PEDIR){
             if(resultCode == SOLICITADO){
                 Intent intent1 = new Intent();
-                intent1.putExtra("idDonoAtual",data.getStringExtra("idDonoAtual"));
                 intent1.putExtra("idObjeto",data.getStringExtra("idObjeto"));
-                intent1.putExtra("donoAtual",data.getStringExtra("donoAtual"));
                 intent1.putExtra("dono",data.getStringExtra("dono"));
                 intent1.putExtra("nome",data.getStringExtra("nome"));
                 intent1.putExtra("status",data.getStringExtra("status"));
                 intent1.putExtra("periodo",data.getStringExtra("periodo"));
                 intent1.putExtra("local",data.getStringExtra("local"));
+                intent1.putExtra("imagem",data.getByteArrayExtra("imagem"));
 
                 setResult(SOLICITADO,intent1);
                 PesquisarObjetos.this.finish();
@@ -161,5 +173,9 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
     public void listaVazia(){
         tvObjVazio.setVisibility(View.VISIBLE);
         lista.setVisibility(View.GONE);
+    }
+    public void listaCheia(){
+        tvObjVazio.setVisibility(View.GONE);
+        lista.setVisibility(View.VISIBLE);
     }
 }

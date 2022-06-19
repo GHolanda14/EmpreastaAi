@@ -19,7 +19,7 @@ public class ObjetoDAO extends SQLiteOpenHelper {
     private static final String COLUNA_NOME = "nome";
     private static final String COLUNA_DONO = "id_dono";
     private static final String COLUNA_STATUS = "status";
-    //private static final String COLUNA_IMAGEM = "imagem";
+    private static final String COLUNA_IMAGEM = "imagem";
 
     public ObjetoDAO(@Nullable Context context) {
         super(context, NOME_BD, null, VERSAO_BD);
@@ -33,8 +33,8 @@ public class ObjetoDAO extends SQLiteOpenHelper {
                 COLUNA_DONO + " INTEGER, " +
                 COLUNA_NOME + " TEXT, " +
                 COLUNA_STATUS + " TEXT, "+
+                COLUNA_IMAGEM + " BLOB, "+
                 "FOREIGN KEY("+COLUNA_DONO+") REFERENCES usuario(id))";
-                //COLUNA_IMAGEM + "BLOB )";
         db.execSQL(query);
     }
 
@@ -44,15 +44,14 @@ public class ObjetoDAO extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    //Todo: Terminar a migração de Drawable para Bitmap
-    public String addObjeto(String idDono,String nome, String status){//, Bitmap imagem){
+    public String addObjeto(String idDono,String nome, String status, byte[] imagem){
         SQLiteDatabase bd = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put(COLUNA_DONO,Integer.parseInt(idDono));
         cv.put(COLUNA_NOME, nome);
         cv.put(COLUNA_STATUS, status);
-        //cv.put(COLUNA_IMAGEM, null);
+        cv.put(COLUNA_IMAGEM, imagem);
 
         long resultado = bd.insert(NOME_TABELA, null, cv);
         if(resultado == -1) Toast.makeText(context, "Deu ruim", Toast.LENGTH_SHORT).show();

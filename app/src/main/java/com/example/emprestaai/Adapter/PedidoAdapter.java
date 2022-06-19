@@ -52,6 +52,7 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.ViewHolder
         holder.tvLocalEncontro.setText(pedidos.get(position).getLocal());
         holder.tvPeriodo.setText(pedidos.get(position).getPeriodo());
         holder.tvDono.setText(pedidos.get(position).getObjeto().getDono());
+        holder.dImagem.setImageBitmap(pedidos.get(position).getObjeto().getImagem());
     }
 
     @Override

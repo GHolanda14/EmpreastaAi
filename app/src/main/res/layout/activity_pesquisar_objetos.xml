@@ -41,8 +41,10 @@
         android:id="@+id/tvObjVazio"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:text="@string/tvVazio"
-        android:visibility="gone" />
+        android:textSize="34sp"
+        android:visibility="visible" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
