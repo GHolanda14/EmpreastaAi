@@ -1,4 +1,4 @@
-package com.example.emprestaai.Activity;
+package com.example.emprestaai;
 
 import android.Manifest;
 import android.content.Intent;
@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.example.emprestaai.R;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.ByteArrayOutputStream;
@@ -84,7 +83,8 @@ public class NovoObjeto extends AppCompatActivity {
             }
         });
     }
-
+    //Todo: Adicionar campo de StatusPedido no PedidoDAO
+    //Todo: Criar uma lógica para poder termos uma atividade chamada Solicitações   
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

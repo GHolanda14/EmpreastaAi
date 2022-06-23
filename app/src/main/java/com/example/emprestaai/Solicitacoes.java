@@ -1,4 +1,4 @@
-package com.example.emprestaai.Activity;
+package com.example.emprestaai;
 
 import android.os.Bundle;
 

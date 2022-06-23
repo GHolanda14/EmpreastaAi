@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "618513762685",
+    "project_id": "empresta-ai-95178",
+    "storage_bucket": "empresta-ai-95178.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:618513762685:android:50f6a1436404b5dda9e414",
+        "android_client_info": {
+          "package_name": "com.example.emprestaai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "618513762685-5oadcbiu783u8btk5oore6rhbkipqc7e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiqgiQT25H2UAZqOMI94kR04Ray7Mde_k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "618513762685-5oadcbiu783u8btk5oore6rhbkipqc7e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

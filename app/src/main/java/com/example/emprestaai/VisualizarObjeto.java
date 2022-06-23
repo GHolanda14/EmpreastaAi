@@ -1,4 +1,4 @@
-package com.example.emprestaai.Activity;
+package com.example.emprestaai;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.emprestaai.DAO.ObjetoDAO;
-import com.example.emprestaai.R;
 
 import java.io.ByteArrayOutputStream;
 

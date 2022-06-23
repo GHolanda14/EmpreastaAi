@@ -1,4 +1,4 @@
-package com.example.emprestaai.Activity;
+package com.example.emprestaai;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,7 +20,6 @@ import com.example.emprestaai.Adapter.ObjetoAdapter;
 import com.example.emprestaai.DAO.ObjetoDAO;
 import com.example.emprestaai.DAO.UsuarioDAO;
 import com.example.emprestaai.Model.Objeto;
-import com.example.emprestaai.R;
 import com.example.emprestaai.databinding.ActivityPesquisarObjetosBinding;
 
 import java.io.ByteArrayOutputStream;
@@ -56,7 +55,7 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         lista = (RecyclerView) findViewById(R.id.rvPedidos);
 
         objetos = new ArrayList<Objeto>();
-        objetoDAO = new ObjetoDAO(com.example.emprestaai.Activity.PesquisarObjetos.this);
+        objetoDAO = new ObjetoDAO(PesquisarObjetos.this);
         carregarObjetos(intent.getStringExtra("idDonoAtual"));
 
 
@@ -87,7 +86,7 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
 
     private void carregarObjetos(String idDono) {
         Cursor cursor = objetoDAO.procurarObjetos(idDono);
-        usuarioDAO = new UsuarioDAO(com.example.emprestaai.Activity.PesquisarObjetos.this);
+        usuarioDAO = new UsuarioDAO(PesquisarObjetos.this);
         Cursor cursor2 = usuarioDAO.pegarNomes();
 
         ArrayList<Pair<Integer, String>> pares = new ArrayList<Pair<Integer,String>>();

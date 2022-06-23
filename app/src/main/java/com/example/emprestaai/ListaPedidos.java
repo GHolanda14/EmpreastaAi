@@ -1,4 +1,4 @@
-package com.example.emprestaai.Activity;
+package com.example.emprestaai;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,7 +18,6 @@ import com.example.emprestaai.DAO.PedidoDAO;
 import com.example.emprestaai.DAO.UsuarioDAO;
 import com.example.emprestaai.Model.Objeto;
 import com.example.emprestaai.Model.Pedido;
-import com.example.emprestaai.R;
 
 import java.util.ArrayList;
 
@@ -48,8 +47,8 @@ public class ListaPedidos extends AppCompatActivity{
         listaPedidos.setLayoutManager(layoutManager);
         pedidos = new ArrayList<Pedido>();
 
-        pedidoDAO = new PedidoDAO(com.example.emprestaai.Activity.ListaPedidos.this);
-        objetoDAO = new ObjetoDAO(com.example.emprestaai.Activity.ListaPedidos.this);
+        pedidoDAO = new PedidoDAO(ListaPedidos.this);
+        objetoDAO = new ObjetoDAO(ListaPedidos.this);
         Cursor cursor = pedidoDAO.buscarPedidos(idDonoAtual);
 
         if(cursor.getCount() != 0){

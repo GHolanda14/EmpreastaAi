@@ -1,4 +1,4 @@
-package com.example.emprestaai.Activity;
+package com.example.emprestaai;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,7 +19,6 @@ import com.example.emprestaai.DAO.ObjetoDAO;
 import com.example.emprestaai.DAO.PedidoDAO;
 import com.example.emprestaai.Model.Objeto;
 import com.example.emprestaai.Model.Pedido;
-import com.example.emprestaai.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.ByteArrayOutputStream;
@@ -60,7 +59,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         lista.setLayoutManager(layoutManager);
 
         objetos = new ArrayList<Objeto>();
-        objetoDAO = new ObjetoDAO(com.example.emprestaai.Activity.MeusObjetos.this);
+        objetoDAO = new ObjetoDAO(MeusObjetos.this);
         Cursor cursor = objetoDAO.procurarObjetosDono(ID_DONO_ATUAL);
 
         //Carregando meus objetos do banco
@@ -167,7 +166,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             }
         }else if(requestCode == PEDIR){
             if (resultCode == SOLICITADO){
-                pedidoDAO = new PedidoDAO(com.example.emprestaai.Activity.MeusObjetos.this);
+                pedidoDAO = new PedidoDAO(MeusObjetos.this);
                 idObjeto = data.getStringExtra("idObjeto");
                 String idPedido = pedidoDAO.addPedido(idObjeto,ID_DONO_ATUAL,
                         data.getStringExtra("dono"),

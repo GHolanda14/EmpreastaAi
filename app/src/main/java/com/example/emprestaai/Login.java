@@ -1,4 +1,4 @@
-package com.example.emprestaai.Activity;
+package com.example.emprestaai;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.emprestaai.DAO.UsuarioDAO;
-import com.example.emprestaai.R;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class Login extends AppCompatActivity {
