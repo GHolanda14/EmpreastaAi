@@ -47,7 +47,7 @@ public class NovoObjeto extends AppCompatActivity {
         btnFoto = (Button) findViewById(R.id.btnFoto);
         imageView =(ImageView) findViewById(R.id.ivFoto);
         btnAddObj = (Button) findViewById(R.id.btnAddObj);
-
+        imageView.setVisibility(View.GONE);
 
 
         if(intent.hasExtra("nome")){
@@ -55,6 +55,7 @@ public class NovoObjeto extends AppCompatActivity {
             tgStatus.setChecked(intent.getStringExtra("status").equals(getString(R.string.tgStatusOn)) ? true : false);
             imagem = intent.getByteArrayExtra("imagem");
             imageView.setImageBitmap(getImage(imagem));
+            imageView.setVisibility(View.VISIBLE);
         }
 
         btnFoto.setOnClickListener(new View.OnClickListener() {
@@ -68,9 +69,12 @@ public class NovoObjeto extends AppCompatActivity {
         btnAddObj.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(tiNomeObj.getEditText().getText().toString().isEmpty()){
+                if(tiNomeObj.getEditText().getText().toString().isEmpty()) {
                     Toast.makeText(NovoObjeto.this, "Preencha o nome!", Toast.LENGTH_SHORT).show();
-                }//Todo: testar se esta sem foto
+                }
+                else if(imageView.getVisibility() == View.GONE){
+                    Toast.makeText(NovoObjeto.this, "Escolha ou tire uma foto do objeto!", Toast.LENGTH_SHORT).show();
+                }
                 else {
                     Intent intent1 = new Intent();
                     intent1.putExtra("idObjeto",intent.getStringExtra("idObjeto"));
@@ -96,13 +100,35 @@ public class NovoObjeto extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
+
             imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             a = BitmapFactory.decodeFile(picturePath);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             a.compress(Bitmap.CompressFormat.PNG,0,byteArrayOutputStream);
             imagem = byteArrayOutputStream.toByteArray();
+            imageView.setVisibility(View.VISIBLE);
+//            adicionarImagemDB();
         }
     }
+
+//    public void adicionarImagemDB(){
+//        String path = "objetos/"+ UUID.randomUUID() + ".png";
+//        FirebaseStorage storage = FirebaseStorage.getInstance();
+//        StorageReference sr = storage.getReference(path);
+//
+//        StorageMetadata metadata = new StorageMetadata.Builder()
+//                .setCustomMetadata("text",tiNomeObj.getEditText().getText().toString()).build();
+//
+//        UploadTask uploadTask = sr.putBytes(imagem,metadata);
+//        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                Uri url = taskSnapshot.getUploadSessionUri();
+//                Toast.makeText(NovoObjeto.this, url.toString(), Toast.LENGTH_SHORT).show();
+//                Log.d("msg",url.toString());
+//            }
+//        });
+//    }
     public Bitmap getImage(byte[] image) {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
     }

@@ -56,7 +56,7 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
 
         objetos = new ArrayList<Objeto>();
         objetoDAO = new ObjetoDAO(PesquisarObjetos.this);
-        carregarObjetos(intent.getStringExtra("idDonoAtual"));
+        //carregarObjetos(intent.getStringExtra("idDonoAtual"));
 
 
         lista.setHasFixedSize(true);
