@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,10 +36,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -59,6 +64,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     ObjetoDAO objetoDAO;
     PedidoDAO pedidoDAO;
     ImageView imageView;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,23 +75,53 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         getDonoAtual();
         Intent intent = getIntent();
 
-        tvObjeto = (TextView) findViewById(R.id.tvObjeto);
-        tvObjeto.setVisibility(View.GONE);
-        lista = (RecyclerView) findViewById(R.id.rvPedidos);
-        fabAdd = (FloatingActionButton) findViewById(R.id.add);
-        fabPesquisar = (FloatingActionButton) findViewById(R.id.pesquisar);
-        fabPedidos = (FloatingActionButton) findViewById(R.id.meusPedidos);
-        fabSolicitacoes = (FloatingActionButton) findViewById(R.id.solicitacoes);
+        inicializarComponentes();
         lista.setHasFixedSize(true);
-        imageView = (ImageView) findViewById(R.id.imageView);
-        //Todo: Linkar a imagem ao firestore
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+            .build();
+        ImageLoader.getInstance().init(config);
 
         layoutManager = new LinearLayoutManager(this);
         lista.setLayoutManager(layoutManager);
 
         objetos = new ArrayList<Objeto>();
-        objetoDAO = new ObjetoDAO(MeusObjetos.this);
-        /*Cursor cursor = objetoDAO.procurarObjetosDono(ID_DONO_ATUAL);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        String path = "objetos/"+ ID_DONO_ATUAL+"/";
+        StorageReference sr = storage.getReference(path);
+
+        //Carregando os objetos do usuário atual
+        loadingData();
+        db.collection("Objetos").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        objetos.clear();
+                        ImageLoader imageLoader = ImageLoader.getInstance();
+                        for(DocumentSnapshot snapshot : task.getResult()){
+                            imageLoader.loadImage(snapshot.getString("imagem"), new SimpleImageLoadingListener() {
+                                @Override
+                                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                                    Objeto  obj = new Objeto(snapshot.getId(),
+                                            snapshot.getString("dono"),
+                                            snapshot.getString("nome"),
+                                            snapshot.getString("status"),
+                                            loadedImage);
+                                    objetos.add(obj);
+                                    adapter = new ObjetoAdapter(MeusObjetos.this,objetos);
+                                    lista.setAdapter(adapter);
+                                    Toast.makeText(MeusObjetos.this, objetos.toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                });
+
+
+        /*objetoDAO = new ObjetoDAO(MeusObjetos.this);
+        Cursor cursor = objetoDAO.procurarObjetosDono(ID_DONO_ATUAL);
 
         //Carregando meus objetos do banco
         if(cursor.getCount() == 0){
@@ -102,8 +138,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         }
         cursor.close();
 
-        adapter = new ObjetoAdapter(this,objetos);
-        lista.setAdapter(adapter);*/
+        */
         //Todo: Solicitar ou recusar pedidos
 
         fabPesquisar.setOnClickListener(new View.OnClickListener() {
@@ -127,8 +162,8 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         fabSolicitacoes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent1 = new Intent(MeusObjetos.this, Solicitacoes.class);
-                //startActivity(intent1);
+                Intent intent1 = new Intent(MeusObjetos.this, Solicitacoes.class);
+                startActivity(intent1);
             }
         });
         fabSolicitacoes.setVisibility(View.GONE);
@@ -140,6 +175,18 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 startActivityForResult(intent1,ADD);
             }
         });
+    }
+
+    private void inicializarComponentes() {
+        tvObjeto = (TextView) findViewById(R.id.tvObjeto);
+        tvObjeto.setVisibility(View.GONE);
+        lista = (RecyclerView) findViewById(R.id.rvPedidos);
+        fabAdd = (FloatingActionButton) findViewById(R.id.add);
+        fabPesquisar = (FloatingActionButton) findViewById(R.id.pesquisar);
+        fabPedidos = (FloatingActionButton) findViewById(R.id.meusPedidos);
+        fabSolicitacoes = (FloatingActionButton) findViewById(R.id.solicitacoes);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        imageView = (ImageView) findViewById(R.id.imageView);
     }
 
     @Override
@@ -200,11 +247,14 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                                 db.collection("Objetos").add(obj).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
-                                        Objeto objeto = new Objeto(idObjeto,
+                                        Objeto objeto = new Objeto(documentReference.getId(),
                                                 DONO_ATUAL,
                                                 data.getStringExtra("nome"),
                                                 data.getStringExtra("status"),
                                                 getImage(data.getByteArrayExtra("imagem")));
+                                        objetos.add(objeto);
+                                        adapter.notifyItemInserted(objetos.size() - 1);
+                                        isListavazia();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -222,7 +272,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                     }
                 });
 
-//            idObjeto = objetoDAO.addObjeto(ID_DONO_ATUAL,
+//            idObjeto = objetoDAO.addObjeto(ID_DONO_ATUAL, SQLITE aqui
 //                        data.getStringExtra("nome"),
 //                        data.getStringExtra("status"),
 //                        data.getByteArrayExtra("imagem"));
@@ -320,6 +370,12 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             lista.setVisibility(View.VISIBLE);
             tvObjeto.setVisibility(View.GONE);
         }
+    }
+
+    public void loadingData(){
+        progressBar.setVisibility(View.VISIBLE);
+        lista.setVisibility(View.GONE);
+        tvObjeto.setVisibility(View.GONE);
     }
 
     public Bitmap getImage(byte[] image) {
