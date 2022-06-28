@@ -46,6 +46,7 @@ public class ObjetoAdapter extends RecyclerView.Adapter<ObjetoAdapter.ViewHolder
             });
         }
     }
+
     @NonNull
     @Override
     public ObjetoAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

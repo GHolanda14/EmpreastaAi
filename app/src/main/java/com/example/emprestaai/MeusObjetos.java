@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emprestaai.Adapter.ObjetoAdapter;
+import com.example.emprestaai.DAO.ImagemDAO;
 import com.example.emprestaai.DAO.ObjetoDAO;
 import com.example.emprestaai.DAO.PedidoDAO;
 import com.example.emprestaai.Model.Objeto;
@@ -65,6 +67,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     PedidoDAO pedidoDAO;
     ImageView imageView;
     ProgressBar progressBar;
+    ImagemDAO imagemDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,22 +102,33 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         objetos.clear();
-                        ImageLoader imageLoader = ImageLoader.getInstance();
-                        for(DocumentSnapshot snapshot : task.getResult()){
-                            imageLoader.loadImage(snapshot.getString("imagem"), new SimpleImageLoadingListener() {
-                                @Override
-                                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                                    Objeto  obj = new Objeto(snapshot.getId(),
-                                            snapshot.getString("dono"),
-                                            snapshot.getString("nome"),
-                                            snapshot.getString("status"),
-                                            loadedImage);
-                                    objetos.add(obj);
-                                    adapter = new ObjetoAdapter(MeusObjetos.this,objetos);
-                                    lista.setAdapter(adapter);
-                                    Toast.makeText(MeusObjetos.this, objetos.toString(), Toast.LENGTH_SHORT).show();
+                        if(task.isSuccessful()){
+                            if(task.getResult().isEmpty()){
+                                progressBar.setVisibility(View.GONE);
+                                isListavazia();
+                                adapter = new ObjetoAdapter(MeusObjetos.this, objetos);
+                                lista.setAdapter(adapter);
+                            }else {
+                                ImageLoader imageLoader = ImageLoader.getInstance();
+                                for(DocumentSnapshot snapshot : task.getResult()) {
+                                    imageLoader.loadImage(snapshot.getString("imagem"), new SimpleImageLoadingListener() {
+                                        @Override
+                                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                                            Objeto obj = new Objeto(snapshot.getId(),
+                                                    snapshot.getString("dono"),
+                                                    snapshot.getString("nome"),
+                                                    snapshot.getString("status"),
+                                                    loadedImage);
+                                            objetos.add(obj);
+                                            adapter = new ObjetoAdapter(MeusObjetos.this, objetos);
+                                            lista.setAdapter(adapter);
+                                            progressBar.setVisibility(View.GONE);
+                                            isListavazia();
+                                        }
+                                    });
                                 }
-                            });
+                            }
+
                         }
                     }
                 });
@@ -167,6 +181,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             }
         });
         fabSolicitacoes.setVisibility(View.GONE);
+        //Todo: Consertar Update e delete do objeto
 
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,13 +225,15 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
 
         if (requestCode == ADD) {
             if (resultCode == RESULT_OK) {
-                String path = "objetos/"+ ID_DONO_ATUAL+"/" +UUID.randomUUID() + ".png";
+                //Todo: Levar isso para ObjetoDAO
+                String idImagem = UUID.randomUUID().toString();
+                String path = "objetos/"+ ID_DONO_ATUAL+"/" + idImagem + ".png";
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 StorageReference sr = storage.getReference(path);
 
                 StorageMetadata metadata = new StorageMetadata.Builder()
-                        .setCustomMetadata("text",data.getStringExtra("nome")).build();
-
+                        .setCustomMetadata("Nome",data.getStringExtra("nome")).build();
+                //Todo: Solucionar problema da edição com o storage
                 UploadTask uploadTask = sr.putBytes(data.getByteArrayExtra("imagem"),metadata);
                 Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
@@ -231,7 +248,6 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                     public void onComplete(@NonNull Task<Uri> task) {
                         if (task.isSuccessful()) {
                             Uri downloadUri = task.getResult();
-                            Toast.makeText(MeusObjetos.this, "Successfully uploaded", Toast.LENGTH_SHORT).show();
                             if (downloadUri != null) {
                                 String photoStringLink = downloadUri.toString(); //YOU WILL GET THE DOWNLOAD URL HERE !!!!
                                 System.out.println("Upload " + photoStringLink);
@@ -243,6 +259,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                                 obj.put("nome",data.getStringExtra("nome"));
                                 obj.put("status",data.getStringExtra("status"));
                                 obj.put("imagem",downloadUri.toString());
+                                obj.put("idImagem",idImagem);
 
                                 db.collection("Objetos").add(obj).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
@@ -293,13 +310,51 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 idObjeto = data.getStringExtra("idObjeto");
                 int posi = getIndexObj();
 
-                objetos.remove(posi);
-                adapter.notifyItemRemoved(posi);
-                Toast.makeText(this, "Objeto excluído com sucesso", Toast.LENGTH_SHORT).show();
-                isListavazia();
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                //Todo: Levar isso pra ObjetoDAO
+                db.collection("Objetos").document(idObjeto).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DocumentSnapshot document = task.getResult();
+                            StorageReference refer = storage.getReference();
+                            String path = "objetos/"+ ID_DONO_ATUAL+"/" + document.get("idImagem") + ".png";
+                            StorageReference sr = refer.child(path);
+                            sr.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Log.d("msg", "Foto deletada com sucesso!");
+                                    db.collection("Objetos").document(idObjeto).delete()
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if(task.isSuccessful()){
+                                                        Toast.makeText(MeusObjetos.this, "Objeto deletado!", Toast.LENGTH_SHORT).show();
+                                                        objetos.remove(posi);
+                                                        adapter.notifyItemRemoved(posi);
+                                                        isListavazia();
+                                                    }else{
+                                                        Toast.makeText(MeusObjetos.this, "Erro ao deletar", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("msg","erro ao deletar foto");
+                                }
+                            });
+                        }
+                    }
+                });
+
+
             }else if(resultCode == EDITAR){
                 idObjeto = data.getStringExtra("idObjeto");
                 int posi = getIndexObj();
+
 
                 objetoDAO.updateObjeto(idObjeto,
                         ID_DONO_ATUAL,
