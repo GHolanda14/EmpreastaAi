@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -225,7 +224,6 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
 
         if (requestCode == ADD) {
             if (resultCode == RESULT_OK) {
-                //Todo: Levar isso para ObjetoDAO
                 String idImagem = UUID.randomUUID().toString();
                 String path = "objetos/"+ ID_DONO_ATUAL+"/" + idImagem + ".png";
                 FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -233,8 +231,8 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
 
                 StorageMetadata metadata = new StorageMetadata.Builder()
                         .setCustomMetadata("Nome",data.getStringExtra("nome")).build();
-                //Todo: Solucionar problema da edição com o storage
                 UploadTask uploadTask = sr.putBytes(data.getByteArrayExtra("imagem"),metadata);
+                loadingData();
                 Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
                     public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -272,6 +270,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                                         objetos.add(objeto);
                                         adapter.notifyItemInserted(objetos.size() - 1);
                                         isListavazia();
+                                        Toast.makeText(MeusObjetos.this, "Objeto adicionado com sucesso!", Toast.LENGTH_SHORT).show();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -280,39 +279,19 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                                     }
                                 });
                             }
-
-                            }
-                        else {
-                            // Handle failures
-                            // ...
                         }
                     }
                 });
-
-//            idObjeto = objetoDAO.addObjeto(ID_DONO_ATUAL, SQLITE aqui
-//                        data.getStringExtra("nome"),
-//                        data.getStringExtra("status"),
-//                        data.getByteArrayExtra("imagem"));
-//                if(!idObjeto.equals("-1")) {
-//                    Objeto obj = new Objeto(idObjeto,
-//                            DONO_ATUAL,
-//                            data.getStringExtra("nome"),
-//                            data.getStringExtra("status"),
-//                            getImage(data.getByteArrayExtra("imagem")));
-//                    objetos.add(obj);
-//                    adapter.notifyItemInserted(objetos.size() - 1);
-//                    isListavazia();
-                }
-
             }
+        }
+
         else if(requestCode == VISUALIZAR){
             if(resultCode == EXCLUIR){
                 idObjeto = data.getStringExtra("idObjeto");
                 int posi = getIndexObj();
-
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 FirebaseStorage storage = FirebaseStorage.getInstance();
-                //Todo: Levar isso pra ObjetoDAO
+                loadingData();
                 db.collection("Objetos").document(idObjeto).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -324,42 +303,40 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                             sr.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    Log.d("msg", "Foto deletada com sucesso!");
-                                    db.collection("Objetos").document(idObjeto).delete()
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if(task.isSuccessful()){
-                                                        Toast.makeText(MeusObjetos.this, "Objeto deletado!", Toast.LENGTH_SHORT).show();
-                                                        objetos.remove(posi);
-                                                        adapter.notifyItemRemoved(posi);
-                                                        isListavazia();
-                                                    }else{
-                                                        Toast.makeText(MeusObjetos.this, "Erro ao deletar", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                            });
+                                    db.collection("Objetos").document(idObjeto).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            objetos.remove(posi);
+                                            adapter.notifyItemRemoved(posi);
+                                            isListavazia();
+                                            Toast.makeText(MeusObjetos.this, "Objeto deletado!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(MeusObjetos.this, "Erro ao deletar objeto!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.d("msg","erro ao deletar foto");
+                                    Toast.makeText(MeusObjetos.this, "Erro ao deletar foto!", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
                     }
                 });
+            }
 
-
-            }else if(resultCode == EDITAR){
+            else if(resultCode == EDITAR){
                 idObjeto = data.getStringExtra("idObjeto");
                 int posi = getIndexObj();
 
-
-                objetoDAO.updateObjeto(idObjeto,
-                        ID_DONO_ATUAL,
-                        data.getStringExtra("nome"),
-                        data.getStringExtra("status"));
+//                objetoDAO.updateObjeto(idObjeto,
+//                        ID_DONO_ATUAL,
+//                        data.getStringExtra("nome"),
+//                        data.getStringExtra("status"));
 
                 Objeto obj = new Objeto(idObjeto,
                         DONO_ATUAL,
@@ -418,6 +395,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     }
 
     public void isListavazia(){
+        progressBar.setVisibility(View.GONE);
         if (objetos.isEmpty()) {
             lista.setVisibility(View.GONE);
             tvObjeto.setVisibility(View.VISIBLE);

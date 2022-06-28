@@ -46,15 +46,13 @@ public class VisualizarObjeto extends AppCompatActivity {
                 if(tvStatus.getText().toString().equals(getString(R.string.tgStatusOff))){
                     Toast.makeText(VisualizarObjeto.this, "Não é possível deletar um objeto que está emprestado.", Toast.LENGTH_LONG).show();
                 }else{
-                    ObjetoDAO objetoDAO = new ObjetoDAO(VisualizarObjeto.this);
+                    ObjetoDAO objetoDAO = new ObjetoDAO();
                     Intent ints = new Intent();
                     ints.putExtra("idObjeto", intent.getStringExtra("idObjeto"));
-                    if(objetoDAO.deleteObjeto(intent.getStringExtra("idObjeto"))){
-                        setResult(EXCLUIR,ints);
-                        VisualizarObjeto.this.finish();
+                    setResult(EXCLUIR,ints);
+                    VisualizarObjeto.this.finish();
                     }
                 }
-            }
         });
 
         btnEditar.setOnClickListener(new View.OnClickListener() {
