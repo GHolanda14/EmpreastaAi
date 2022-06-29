@@ -71,9 +71,10 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meus_objetos);
 
+        Intent intent = getIntent();
+
         ID_DONO_ATUAL = FirebaseAuth.getInstance().getUid();
         getDonoAtual();
-        Intent intent = getIntent();
 
         inicializarComponentes();
         lista.setHasFixedSize(true);
@@ -86,50 +87,6 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         lista.setLayoutManager(layoutManager);
 
         objetos = new ArrayList<Objeto>();
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        String path = "objetos/"+ ID_DONO_ATUAL+"/";
-        StorageReference sr = storage.getReference(path);
-
-        //Carregando os objetos do usuário atual
-        loadingData();
-        db.collection("Objetos").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        objetos.clear();
-                        if(task.isSuccessful()){
-                            if(task.getResult().isEmpty()){
-                                progressBar.setVisibility(View.GONE);
-                                isListavazia();
-                                adapter = new ObjetoAdapter(MeusObjetos.this, objetos);
-                                lista.setAdapter(adapter);
-                            }else {
-                                ImageLoader imageLoader = ImageLoader.getInstance();
-                                for(DocumentSnapshot snapshot : task.getResult()) {
-                                    imageLoader.loadImage(snapshot.getString("imagem"), new SimpleImageLoadingListener() {
-                                        @Override
-                                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                                            Objeto obj = new Objeto(snapshot.getId(),
-                                                    snapshot.getString("dono"),
-                                                    snapshot.getString("nome"),
-                                                    snapshot.getString("status"),
-                                                    loadedImage);
-                                            objetos.add(obj);
-                                            adapter = new ObjetoAdapter(MeusObjetos.this, objetos);
-                                            lista.setAdapter(adapter);
-                                            progressBar.setVisibility(View.GONE);
-                                            isListavazia();
-                                        }
-                                    });
-                                }
-                            }
-
-                        }
-                    }
-                });
-
 
         /*objetoDAO = new ObjetoDAO(MeusObjetos.this);
         Cursor cursor = objetoDAO.procurarObjetosDono(ID_DONO_ATUAL);
@@ -373,6 +330,53 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 if(value != null){
                     DONO_ATUAL = value.getString("nome");
+                    carregarObjetos();
+                }
+            }
+        });
+    }
+
+    private void carregarObjetos() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        String path = "objetos/"+ ID_DONO_ATUAL+"/";
+        StorageReference sr = storage.getReference(path);
+
+        //Carregando os objetos do usuário atual
+        loadingData();
+
+        db.collection("Objetos")
+                .whereEqualTo("dono", DONO_ATUAL)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                objetos.clear();
+                if(task.isSuccessful()){
+                    if(task.getResult().isEmpty()){
+                        progressBar.setVisibility(View.GONE);
+                        isListavazia();
+                        adapter = new ObjetoAdapter(MeusObjetos.this, objetos);
+                        lista.setAdapter(adapter);
+                    }else {
+                        ImageLoader imageLoader = ImageLoader.getInstance();
+                        for(DocumentSnapshot snapshot : task.getResult()) {
+                            imageLoader.loadImage(snapshot.getString("imagem"), new SimpleImageLoadingListener() {
+                                @Override
+                                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                                    Objeto obj = new Objeto(snapshot.getId(),
+                                            snapshot.getString("dono"),
+                                            snapshot.getString("nome"),
+                                            snapshot.getString("status"),
+                                            loadedImage);
+                                    objetos.add(obj);
+                                    adapter = new ObjetoAdapter(MeusObjetos.this, objetos);
+                                    lista.setAdapter(adapter);
+                                    progressBar.setVisibility(View.GONE);
+                                    isListavazia();
+                                }
+                            });
+                        }
+                    }
                 }
             }
         });
