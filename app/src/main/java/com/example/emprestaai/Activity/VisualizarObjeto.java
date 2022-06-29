@@ -1,4 +1,4 @@
-package com.example.emprestaai;
+package com.example.emprestaai.Activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,7 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.emprestaai.DAO.ObjetoDAO;
+import com.example.emprestaai.R;
 
 import java.io.ByteArrayOutputStream;
 
@@ -46,7 +46,6 @@ public class VisualizarObjeto extends AppCompatActivity {
                 if(tvStatus.getText().toString().equals(getString(R.string.tgStatusOff))){
                     Toast.makeText(VisualizarObjeto.this, "Não é possível deletar um objeto que está emprestado.", Toast.LENGTH_LONG).show();
                 }else{
-                    ObjetoDAO objetoDAO = new ObjetoDAO();
                     Intent ints = new Intent();
                     ints.putExtra("idObjeto", intent.getStringExtra("idObjeto"));
                     setResult(EXCLUIR,ints);
@@ -79,6 +78,7 @@ public class VisualizarObjeto extends AppCompatActivity {
                 tvStatus.setText(status);
                 ivObjetoVisuObj.setImageBitmap(getImage(data.getByteArrayExtra("imagem")));
                 setResult(EDITAR,data);
+                VisualizarObjeto.this.finish();
             }else if(resultCode == RESULT_CANCELED){
                 setResult(RESULT_CANCELED);
                 VisualizarObjeto.this.finish();

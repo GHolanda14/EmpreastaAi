@@ -1,4 +1,4 @@
-package com.example.emprestaai;
+package com.example.emprestaai.Activity;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emprestaai.Adapter.PedidoAdapter;
-import com.example.emprestaai.DAO.ObjetoDAO;
 import com.example.emprestaai.DAO.PedidoDAO;
 import com.example.emprestaai.Model.Pedido;
+import com.example.emprestaai.R;
 
 import java.util.ArrayList;
 
@@ -26,7 +26,6 @@ public class ListaPedidos extends AppCompatActivity{
     RecyclerView.LayoutManager layoutManager;
     TextView tvListPedidosVazio;
     PedidoDAO pedidoDAO;
-    ObjetoDAO objetoDAO;
     String idDonoAtual;
     int VISUALIZAR = 2;
 

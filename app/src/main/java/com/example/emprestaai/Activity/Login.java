@@ -1,4 +1,4 @@
-package com.example.emprestaai;
+package com.example.emprestaai.Activity;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.emprestaai.DAO.UsuarioDAO;
+import com.example.emprestaai.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;

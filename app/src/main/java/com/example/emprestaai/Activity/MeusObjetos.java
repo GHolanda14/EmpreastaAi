@@ -1,10 +1,11 @@
-package com.example.emprestaai;
+package com.example.emprestaai.Activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,11 +21,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emprestaai.Adapter.ObjetoAdapter;
-import com.example.emprestaai.DAO.ImagemDAO;
-import com.example.emprestaai.DAO.ObjetoDAO;
 import com.example.emprestaai.DAO.PedidoDAO;
 import com.example.emprestaai.Model.Objeto;
 import com.example.emprestaai.Model.Pedido;
+import com.example.emprestaai.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -62,11 +62,9 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     int ADD = 1, VISUALIZAR=2, EXCLUIR = 3, EDITAR = 4, PEDIR = 5, SOLICITADO = 6;
     String idObjeto;
     String DONO_ATUAL, ID_DONO_ATUAL;
-    ObjetoDAO objetoDAO;
     PedidoDAO pedidoDAO;
     ImageView imageView;
     ProgressBar progressBar;
-    ImagemDAO imagemDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +178,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             }
         });
         fabSolicitacoes.setVisibility(View.GONE);
-        //Todo: Consertar Update e delete do objeto
+        //Todo: Consertar Update
 
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,8 +245,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                         if (task.isSuccessful()) {
                             Uri downloadUri = task.getResult();
                             if (downloadUri != null) {
-                                String photoStringLink = downloadUri.toString(); //YOU WILL GET THE DOWNLOAD URL HERE !!!!
-                                System.out.println("Upload " + photoStringLink);
+                                String photoStringLink = downloadUri.toString();
 
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -288,63 +285,50 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         else if(requestCode == VISUALIZAR){
             if(resultCode == EXCLUIR){
                 idObjeto = data.getStringExtra("idObjeto");
-                int posi = getIndexObj();
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                loadingData();
-                db.collection("Objetos").document(idObjeto).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()){
-                            DocumentSnapshot document = task.getResult();
-                            StorageReference refer = storage.getReference();
-                            String path = "objetos/"+ ID_DONO_ATUAL+"/" + document.get("idImagem") + ".png";
-                            StorageReference sr = refer.child(path);
-                            sr.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    db.collection("Objetos").document(idObjeto).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            objetos.remove(posi);
-                                            adapter.notifyItemRemoved(posi);
-                                            isListavazia();
-                                            Toast.makeText(MeusObjetos.this, "Objeto deletado!", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(MeusObjetos.this, "Erro ao deletar objeto!", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(MeusObjetos.this, "Erro ao deletar foto!", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    }
-                });
+                excluirFotoAtual(EXCLUIR,"","",null);
             }
 
             else if(resultCode == EDITAR){
                 idObjeto = data.getStringExtra("idObjeto");
                 int posi = getIndexObj();
 
-//                objetoDAO.updateObjeto(idObjeto,
-//                        ID_DONO_ATUAL,
-//                        data.getStringExtra("nome"),
-//                        data.getStringExtra("status"));
+                if(data.getBooleanExtra("novaFoto",false)){
+                    excluirFotoAtual(EDITAR,
+                            data.getStringExtra("nome"),
+                            data.getStringExtra("status"),
+                            data.getByteArrayExtra("imagem"));
+                }else {
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    db.collection("Objetos").document(idObjeto)
+                            .update("nome",data.getStringExtra("nome"),
+                                    "status",data.getStringExtra("status"))
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(MeusObjetos.this, "Objeto alterado com sucesso!", Toast.LENGTH_SHORT).show();
+                                        Objeto obj = new Objeto(idObjeto,
+                                                DONO_ATUAL,
+                                                data.getStringExtra("nome"),
+                                                data.getStringExtra("status"),
+                                                getImage(data.getByteArrayExtra("imagem")));
+                                        objetos.set(posi,obj);
+                                        adapter.notifyItemChanged(posi);
+                                        isListavazia();
+                                    }
+                                    else{
+                                        Toast.makeText(MeusObjetos.this, "Erro ao alterar objeto!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("msg",e.getMessage());
+                                }
+                            });
+                }
 
-                Objeto obj = new Objeto(idObjeto,
-                        DONO_ATUAL,
-                        data.getStringExtra("nome"),
-                        data.getStringExtra("status"),
-                        getImage(data.getByteArrayExtra("imagem")));
-                objetos.set(posi,obj);
-                adapter.notifyItemChanged(posi);
+
             }
         }else if(requestCode == PEDIR){
             if (resultCode == SOLICITADO){
@@ -405,14 +389,117 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         }
     }
 
+    public void guardarFotoBanco(String nome, String status, byte[] imagem) {
+        int posi = getIndexObj();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String idImagem = UUID.randomUUID().toString();
+        String path = "objetos/" + ID_DONO_ATUAL + "/" + idImagem + ".png";
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference sr = storage.getReference(path);
+
+        StorageMetadata metadata = new StorageMetadata.Builder()
+                .setCustomMetadata("Nome", nome).build();
+        UploadTask uploadTask = sr.putBytes(imagem, metadata);
+        loadingData();
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+                return sr.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    if (downloadUri != null) {
+                        String linkFoto = downloadUri.toString();
+
+                        db.collection("Objetos").document(idObjeto)
+                                .update("nome",nome,
+                                        "status",status
+                                        ,"imagem",linkFoto,
+                                        "idImagem",idImagem).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            Objeto obj = new Objeto(idObjeto,
+                                                    DONO_ATUAL,
+                                                    nome,
+                                                    status,
+                                                    getImage(imagem));
+                                            objetos.set(posi,obj);
+                                            adapter.notifyItemChanged(posi);
+                                            isListavazia();
+                                            Toast.makeText(MeusObjetos.this, "Objeto alterado com sucesso!", Toast.LENGTH_SHORT).show();
+                                        }
+                                        else{
+                                            Toast.makeText(MeusObjetos.this, "Erro ao alterar objeto!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d("msg",e.getMessage());
+                                    }
+                                });
+                        }
+                    }
+                }
+            });
+    }
+
+    public void excluirFotoAtual(int opcao, String nome, String status, byte[] imagem) {
+        int posi = getIndexObj();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        loadingData();
+        db.collection("Objetos").document(idObjeto).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    StorageReference refer = storage.getReference();
+                    String path = "objetos/" + ID_DONO_ATUAL + "/" + document.get("idImagem") + ".png";
+                    StorageReference sr = refer.child(path);
+                    sr.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            if(opcao == EXCLUIR){
+                                db.collection("Objetos").document(idObjeto).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        objetos.remove(posi);
+                                        adapter.notifyItemRemoved(posi);
+                                        isListavazia();
+                                        Toast.makeText(MeusObjetos.this, "Objeto deletado!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(MeusObjetos.this, "Erro ao deletar objeto!", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }else{
+                                guardarFotoBanco(nome,status,imagem);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
     public void loadingData(){
         progressBar.setVisibility(View.VISIBLE);
         lista.setVisibility(View.GONE);
         tvObjeto.setVisibility(View.GONE);
     }
 
-    public Bitmap getImage(byte[] image) {
-        return BitmapFactory.decodeByteArray(image, 0, image.length);
+    public Bitmap getImage(byte[] imagem) {
+        return BitmapFactory.decodeByteArray(imagem, 0, imagem.length);
     }
     public byte[] getBytes(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

@@ -1,4 +1,4 @@
-package com.example.emprestaai;
+package com.example.emprestaai.Activity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,7 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.example.emprestaai.DAO.ImagemDAO;
+import com.example.emprestaai.R;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.ByteArrayOutputStream;
@@ -32,7 +33,7 @@ public class NovoObjeto extends AppCompatActivity {
     int EDITAR = 4, BOTAR_IMAGEM = 7;
     byte[] imagem;
     Bitmap a;
-    ImagemDAO imagemDAO;
+    private boolean novaFoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +52,11 @@ public class NovoObjeto extends AppCompatActivity {
         btnAddObj = (Button) findViewById(R.id.btnAddObj);
         imageView.setVisibility(View.GONE);
 
-
         if (intent.hasExtra("nome")) {
             tiNomeObj.getEditText().setText(intent.getStringExtra("nome"));
             tgStatus.setChecked(intent.getStringExtra("status").equals(getString(R.string.tgStatusOn)) ? true : false);
             imagem = intent.getByteArrayExtra("imagem");
-            imageView.setImageBitmap(imagemDAO.getImage(imagem));
+            imageView.setImageBitmap(getImage(imagem));
             imageView.setVisibility(View.VISIBLE);
         }
 
@@ -81,11 +81,16 @@ public class NovoObjeto extends AppCompatActivity {
                     intent1.putExtra("nome", tiNomeObj.getEditText().getText().toString());
                     intent1.putExtra("status", tgStatus.getText().toString());
                     intent1.putExtra("imagem", imagem);
+                    intent1.putExtra("novaFoto",novaFoto);
                     setResult(RESULT_OK, intent1);
                     NovoObjeto.this.finish();
                 }
             }
         });
+    }
+
+    private Bitmap getImage(byte[] imagem) {
+        return BitmapFactory.decodeByteArray(imagem, 0, imagem.length);
     }
 
     //Todo: Adicionar campo de StatusPedido no PedidoDAO
@@ -108,7 +113,11 @@ public class NovoObjeto extends AppCompatActivity {
             a.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream);
             imagem = byteArrayOutputStream.toByteArray();
             imageView.setVisibility(View.VISIBLE);
-//            adicionarImagemDB();
+            novaFoto = true;
+        }
+        else if(resultCode == RESULT_CANCELED){
+            Log.d("msg","Ele cancelou");
+            novaFoto = false;
         }
     }
 

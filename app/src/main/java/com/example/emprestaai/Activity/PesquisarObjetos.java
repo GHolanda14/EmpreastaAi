@@ -1,4 +1,4 @@
-package com.example.emprestaai;
+package com.example.emprestaai.Activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emprestaai.Adapter.ObjetoAdapter;
-import com.example.emprestaai.DAO.ObjetoDAO;
 import com.example.emprestaai.DAO.UsuarioDAO;
 import com.example.emprestaai.Model.Objeto;
+import com.example.emprestaai.R;
 import com.example.emprestaai.databinding.ActivityPesquisarObjetosBinding;
 
 import java.io.ByteArrayOutputStream;
@@ -35,7 +35,6 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
     TextView tvObjVazio;
     int PEDIR = 5, SOLICITADO = 6;
     String idDonoAtual, donoAtual;
-    ObjetoDAO objetoDAO;
     UsuarioDAO usuarioDAO;
 
     @Override
