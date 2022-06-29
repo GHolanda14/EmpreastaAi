@@ -48,7 +48,7 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.tvNome.setText(pedidos.get(position).getObjeto().getNome());
-        holder.tvStatus.setText(pedidos.get(position).getObjeto().getStatus());
+        holder.tvStatus.setText(pedidos.get(position).getStatus());
         holder.tvLocalEncontro.setText(pedidos.get(position).getLocal());
         holder.tvPeriodo.setText(pedidos.get(position).getPeriodo());
         holder.tvDono.setText(pedidos.get(position).getObjeto().getDono());

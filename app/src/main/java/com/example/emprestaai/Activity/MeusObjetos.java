@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.emprestaai.Adapter.ObjetoAdapter;
 import com.example.emprestaai.DAO.PedidoDAO;
 import com.example.emprestaai.Model.Objeto;
-import com.example.emprestaai.Model.Pedido;
 import com.example.emprestaai.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -100,7 +99,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(MeusObjetos.this, ListaPedidos.class);
-                intent1.putExtra("idDonoAtual",ID_DONO_ATUAL);
+                intent1.putExtra("donoAtual",DONO_ATUAL);
                 startActivityForResult(intent1,PEDIR);
             }
         });
@@ -266,25 +265,32 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             }
         }else if(requestCode == PEDIR){
             if (resultCode == SOLICITADO){
-                pedidoDAO = new PedidoDAO(MeusObjetos.this);
                 idObjeto = data.getStringExtra("idObjeto");
-                String idPedido = pedidoDAO.addPedido(idObjeto,ID_DONO_ATUAL,
-                        data.getStringExtra("dono"),
-                        data.getStringExtra("periodo"),
-                        data.getStringExtra("local"));
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                if(!idPedido.equals("-1")) {
-                    Objeto obj = new Objeto(idObjeto,
-                            data.getStringExtra("dono"),
-                            data.getStringExtra("nome"),
-                            data.getStringExtra("status"),
-                            getImage(data.getByteArrayExtra("imagem")));
-                    Pedido pedido = new Pedido(idPedido, obj, data.getStringExtra("periodo"),data.getStringExtra("local"), ID_DONO_ATUAL);
-                    fabPedidos.callOnClick();
+                Map<String,Object> pedido = new HashMap<>();
+                pedido.put("idObjeto",idObjeto);
+                pedido.put("solicitante",DONO_ATUAL);
+                pedido.put("status",data.getStringExtra("status"));
+                pedido.put("dono",data.getStringExtra("dono"));
+                pedido.put("periodo",data.getStringExtra("periodo"));
+                pedido.put("local",data.getStringExtra("local"));
+
+                db.collection("Pedidos").add(pedido).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(MeusObjetos.this, "Objeto solicitado", Toast.LENGTH_SHORT).show();
+                        fabPedidos.callOnClick();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MeusObjetos.this, "Não funcionou", Toast.LENGTH_LONG).show();
+                    }
+                });
                 }
             }
         }
-    }
 
     @Override
     public void onItemClicked(int posicao, ArrayList<Objeto> objetos) {
@@ -326,10 +332,9 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 objetos.clear();
                 if(task.isSuccessful()){
                     if(task.getResult().isEmpty()){
-                        progressBar.setVisibility(View.GONE);
-                        isListavazia();
                         adapter = new ObjetoAdapter(MeusObjetos.this, objetos);
                         lista.setAdapter(adapter);
+                        isListavazia();
                     }else {
                         ImageLoader imageLoader = ImageLoader.getInstance();
                         for(DocumentSnapshot snapshot : task.getResult()) {
@@ -344,7 +349,6 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                                     objetos.add(obj);
                                     adapter = new ObjetoAdapter(MeusObjetos.this, objetos);
                                     lista.setAdapter(adapter);
-                                    progressBar.setVisibility(View.GONE);
                                     isListavazia();
                                 }
                             });
@@ -353,17 +357,6 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 }
             }
         });
-    }
-
-    public void isListavazia(){
-        progressBar.setVisibility(View.GONE);
-        if (objetos.isEmpty()) {
-            lista.setVisibility(View.GONE);
-            tvObjeto.setVisibility(View.VISIBLE);
-        } else {
-            lista.setVisibility(View.VISIBLE);
-            tvObjeto.setVisibility(View.GONE);
-        }
     }
 
     public void guardarFotoBanco(String nome, String status, byte[] imagem) {
@@ -467,6 +460,16 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 }
             }
         });
+    }
+    public void isListavazia(){
+        progressBar.setVisibility(View.GONE);
+        if (objetos.isEmpty()) {
+            lista.setVisibility(View.GONE);
+            tvObjeto.setVisibility(View.VISIBLE);
+        } else {
+            lista.setVisibility(View.VISIBLE);
+            tvObjeto.setVisibility(View.GONE);
+        }
     }
 
     public void loadingData(){
