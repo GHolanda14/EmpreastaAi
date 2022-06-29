@@ -3,9 +3,12 @@ package com.example.emprestaai.Activity;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +26,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class AlugarObjeto extends AppCompatActivity {
     LinearLayout layForm;
+    ImageView ivObjetoAluObj;
     TextView tvNomeAlugarObj, tvDonoObj;
     TextInputLayout tiLocal;
     TextInputEditText tiData;
@@ -42,9 +46,11 @@ public class AlugarObjeto extends AppCompatActivity {
         tiLocal = (TextInputLayout) findViewById(R.id.tiLocal);
         tiData = (TextInputEditText) findViewById(R.id.tiData);
         btnSolicitar = (Button) findViewById(R.id.btnSolicitar);
+        ivObjetoAluObj = (ImageView) findViewById(R.id.ivObjetoAluObj);
 
         tvDonoObj.setText(intent.getStringExtra("dono"));
         tvNomeAlugarObj.setText(intent.getStringExtra("nome"));
+        ivObjetoAluObj.setImageBitmap(getImage(intent.getByteArrayExtra("imagem")));
 
         String status = intent.getStringExtra("status");
         if(status.equals(getString(R.string.tgStatusOn))){
@@ -87,18 +93,20 @@ public class AlugarObjeto extends AppCompatActivity {
                     Toast.makeText(AlugarObjeto.this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show();
                 }else{
                     Intent intent1 = new Intent();
-                    intent1.putExtra("idDonoAtual",intent.getStringExtra("idDonoAtual"));
-                    intent1.putExtra("donoAtual",intent.getStringExtra("donoAtual"));
                     intent1.putExtra("dono",tvDonoObj.getText().toString().trim());
                     intent1.putExtra("idObjeto", intent.getStringExtra("idObjeto"));
                     intent1.putExtra("nome",tvNomeAlugarObj.getText().toString().trim());
                     intent1.putExtra("status",getString(R.string.hSolicitado));
                     intent1.putExtra("periodo",tiData.getText().toString());
                     intent1.putExtra("local",tiLocal.getEditText().getText().toString());
+                    intent1.putExtra("imagem",intent.getByteArrayExtra("imagem"));
                     setResult(SOLICITADO,intent1);
                     AlugarObjeto.this.finish();
                 }
             }
         });
+    }
+    public Bitmap getImage(byte[] image) {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 }

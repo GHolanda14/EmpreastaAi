@@ -17,7 +17,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/ivObjetoVisuObj"
+                android:id="@+id/ivObjetoAluObj"
                 android:layout_width="match_parent"
                 android:layout_height="245dp"
                 android:maxWidth="100dp"

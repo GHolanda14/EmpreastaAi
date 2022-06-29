@@ -57,6 +57,7 @@ public class ObjetoAdapter extends RecyclerView.Adapter<ObjetoAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ObjetoAdapter.ViewHolder holder, int position) {
         holder.itemView.setTag(objetos.get(position));
+        holder.dImagem.setImageBitmap(objetos.get(position).getImagem());
         holder.tvNome.setText(objetos.get(position).getNome());
         holder.tvStatus.setText(objetos.get(position).getStatus());
     }
