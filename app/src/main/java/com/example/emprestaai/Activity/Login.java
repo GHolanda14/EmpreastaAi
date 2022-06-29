@@ -8,11 +8,16 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.emprestaai.DAO.UsuarioDAO;
 import com.example.emprestaai.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Login extends AppCompatActivity {
     Button btnLogin;
@@ -47,12 +52,31 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
-
     }
+
     public void verificarUsuario() {
+        email = tiEmail.getEditText().getText().toString();
+        senha = tiSenha.getEditText().getText().toString();
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email,senha).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    Intent intent1 = new Intent(Login.this, MeusObjetos.class);
+                    startActivity(intent1);
+                }else{
+                    String erro;
+                    try{
+                        throw task.getException();
+                    }catch (Exception e){
+                        erro = "Erro ao logar usuáro";
+                    }
+                    Toast.makeText(Login.this, erro, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         Cursor cursor = usuarioDAO.procurarUsuario(email);
 
-        if (cursor.getCount() == 0) {
+        /*if (cursor.getCount() == 0) {
             tvErro.setText(getString(R.string.emailNaoEncontrado));
             tvErro.setVisibility(View.VISIBLE);
         } else {
@@ -67,6 +91,6 @@ public class Login extends AppCompatActivity {
                 tvErro.setText(getString(R.string.loginErrado));
                 tvErro.setVisibility(View.VISIBLE);
             }
-        }
+        }*/
     }
 }

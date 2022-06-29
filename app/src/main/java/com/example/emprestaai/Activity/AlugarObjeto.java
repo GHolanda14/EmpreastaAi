@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
@@ -87,11 +88,10 @@ public class AlugarObjeto extends AppCompatActivity {
         btnSolicitar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Todo: Remover comentário
-//                if(tiLocal.getEditText().getText().toString().isEmpty() ||
-//                        tiData.getText().toString().isEmpty()){
-//                    Toast.makeText(AlugarObjeto.this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show();
-//                }else{
+                if(tiLocal.getEditText().getText().toString().isEmpty() ||
+                        tiData.getText().toString().isEmpty()){
+                    Toast.makeText(AlugarObjeto.this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show();
+                }else{
                     Intent intent1 = new Intent();
                     intent1.putExtra("dono",tvDonoObj.getText().toString().trim());
                     intent1.putExtra("idObjeto", intent.getStringExtra("idObjeto"));
@@ -102,7 +102,7 @@ public class AlugarObjeto extends AppCompatActivity {
                     intent1.putExtra("imagem",intent.getByteArrayExtra("imagem"));
                     setResult(SOLICITADO,intent1);
                     AlugarObjeto.this.finish();
-                //}
+                }
             }
         });
     }

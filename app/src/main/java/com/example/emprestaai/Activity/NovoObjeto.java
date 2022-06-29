@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,9 +30,10 @@ public class NovoObjeto extends AppCompatActivity {
     ImageView imageView;
     TextInputLayout tiNomeObj;
     ToggleButton tgStatus;
-    int EDITAR = 4,BOTAR_IMAGEM=7;
+    int EDITAR = 4, BOTAR_IMAGEM = 7;
     byte[] imagem;
     Bitmap a;
+    private boolean novaFoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,38 +48,40 @@ public class NovoObjeto extends AppCompatActivity {
         tiNomeObj = (TextInputLayout) findViewById(R.id.tiNomeObj);
         tgStatus = (ToggleButton) findViewById(R.id.tgStatus);
         btnFoto = (Button) findViewById(R.id.btnFoto);
-        imageView =(ImageView) findViewById(R.id.ivFoto);
+        imageView = (ImageView) findViewById(R.id.ivFoto);
         btnAddObj = (Button) findViewById(R.id.btnAddObj);
+        imageView.setVisibility(View.GONE);
 
-
-
-        if(intent.hasExtra("nome")){
+        if (intent.hasExtra("nome")) {
             tiNomeObj.getEditText().setText(intent.getStringExtra("nome"));
             tgStatus.setChecked(intent.getStringExtra("status").equals(getString(R.string.tgStatusOn)) ? true : false);
             imagem = intent.getByteArrayExtra("imagem");
             imageView.setImageBitmap(getImage(imagem));
+            imageView.setVisibility(View.VISIBLE);
         }
 
         btnFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent1,0);
+                Intent intent1 = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent1, 0);
             }
         });
 
         btnAddObj.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(tiNomeObj.getEditText().getText().toString().isEmpty()){
+                if (tiNomeObj.getEditText().getText().toString().isEmpty()) {
                     Toast.makeText(NovoObjeto.this, "Preencha o nome!", Toast.LENGTH_SHORT).show();
-                }//Todo: testar se esta sem foto
-                else {
+                } else if (imageView.getVisibility() == View.GONE) {
+                    Toast.makeText(NovoObjeto.this, "Escolha ou tire uma foto do objeto!", Toast.LENGTH_SHORT).show();
+                } else {
                     Intent intent1 = new Intent();
-                    intent1.putExtra("idObjeto",intent.getStringExtra("idObjeto"));
+                    intent1.putExtra("idObjeto", intent.getStringExtra("idObjeto"));
                     intent1.putExtra("nome", tiNomeObj.getEditText().getText().toString());
                     intent1.putExtra("status", tgStatus.getText().toString());
                     intent1.putExtra("imagem", imagem);
+                    intent1.putExtra("novaFoto",novaFoto);
                     setResult(RESULT_OK, intent1);
                     NovoObjeto.this.finish();
                 }
@@ -85,30 +89,36 @@ public class NovoObjeto extends AppCompatActivity {
         });
     }
 
+    private Bitmap getImage(byte[] imagem) {
+        return BitmapFactory.decodeByteArray(imagem, 0, imagem.length);
+    }
+
+    //Todo: Adicionar campo de StatusPedido no PedidoDAO
+    //Todo: Criar uma lógica para poder termos uma atividade chamada Solicitações   
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && data.getData() != null) {
+        if (resultCode == RESULT_OK && data.getData() != null) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
+
             imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             a = BitmapFactory.decodeFile(picturePath);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            a.compress(Bitmap.CompressFormat.PNG,0,byteArrayOutputStream);
+            a.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream);
             imagem = byteArrayOutputStream.toByteArray();
+            imageView.setVisibility(View.VISIBLE);
+            novaFoto = true;
+        }
+        else if(resultCode == RESULT_CANCELED){
+            Log.d("msg","Ele cancelou");
+            novaFoto = false;
         }
     }
-    public Bitmap getImage(byte[] image) {
-        return BitmapFactory.decodeByteArray(image, 0, image.length);
-    }
-    public byte[] getBytes(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
-        return stream.toByteArray();
-    }
+
 }

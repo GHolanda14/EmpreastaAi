@@ -1,11 +1,9 @@
 package com.example.emprestaai.Activity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emprestaai.Adapter.ObjetoAdapter;
-import com.example.emprestaai.DAO.ObjetoDAO;
 import com.example.emprestaai.DAO.UsuarioDAO;
 import com.example.emprestaai.Model.Objeto;
 import com.example.emprestaai.R;
@@ -38,7 +35,6 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
     TextView tvObjVazio;
     int PEDIR = 5, SOLICITADO = 6;
     String idDonoAtual, donoAtual;
-    ObjetoDAO objetoDAO;
     UsuarioDAO usuarioDAO;
 
     @Override
@@ -56,8 +52,8 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         lista = (RecyclerView) findViewById(R.id.rvPedidos);
 
         objetos = new ArrayList<Objeto>();
-        objetoDAO = new ObjetoDAO(com.example.emprestaai.Activity.PesquisarObjetos.this);
-        carregarObjetos(intent.getStringExtra("idDonoAtual"));
+        //objetoDAO = new ObjetoDAO(PesquisarObjetos.this);
+        //carregarObjetos(intent.getStringExtra("idDonoAtual"));
 
 
         lista.setHasFixedSize(true);
@@ -85,37 +81,37 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         });
     }
 
-    private void carregarObjetos(String idDono) {
-        Cursor cursor = objetoDAO.procurarObjetos(idDono);
-        usuarioDAO = new UsuarioDAO(com.example.emprestaai.Activity.PesquisarObjetos.this);
-        Cursor cursor2 = usuarioDAO.pegarNomes();
-
-        ArrayList<Pair<Integer, String>> pares = new ArrayList<Pair<Integer,String>>();
-        while (cursor2.moveToNext()){
-            pares.add(new Pair<Integer, String>(cursor2.getInt(0),cursor2.getString(1)));
-        }
-        if(cursor.getCount() == 0){
-            listaVazia();
-        }else{
-            listaCheia();
-            while (cursor.moveToNext()){
-                String nomeDono = "";
-                for(Pair<Integer,String> par : pares){
-                    if(par.first == cursor.getInt(1)){
-                        nomeDono = par.second;
-                        break;
-                    }
-                }
-                objetos.add(new Objeto(Integer.toString(cursor.getInt(0)),
-                        nomeDono,
-                        cursor.getString(2),
-                        cursor.getString(3),
-                        getImage(cursor.getBlob(4))));
-            }
-        }
-        cursor.close();
-        cursor2.close();
-    }
+//    private void carregarObjetos(String idDono) {
+//        Cursor cursor = objetoDAO.procurarObjetos(idDono);
+//        usuarioDAO = new UsuarioDAO(PesquisarObjetos.this);
+//        Cursor cursor2 = usuarioDAO.pegarNomes();
+//
+//        ArrayList<Pair<Integer, String>> pares = new ArrayList<Pair<Integer,String>>();
+//        while (cursor2.moveToNext()){
+//            pares.add(new Pair<Integer, String>(cursor2.getInt(0),cursor2.getString(1)));
+//        }
+//        if(cursor.getCount() == 0){
+//            listaVazia();
+//        }else{
+//            listaCheia();
+//            while (cursor.moveToNext()){
+//                String nomeDono = "";
+//                for(Pair<Integer,String> par : pares){
+//                    if(par.first == cursor.getInt(1)){
+//                        nomeDono = par.second;
+//                        break;
+//                    }
+//                }
+//                objetos.add(new Objeto(Integer.toString(cursor.getInt(0)),
+//                        nomeDono,
+//                        cursor.getString(2),
+//                        cursor.getString(3),
+//                        getImage(cursor.getBlob(4))));
+//            }
+//        }
+//        cursor.close();
+//        cursor2.close();
+//    }
     public Bitmap getImage(byte[] image) {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
