@@ -71,49 +71,27 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meus_objetos);
 
-        Intent intent = getIntent();
-
         ID_DONO_ATUAL = FirebaseAuth.getInstance().getUid();
         getDonoAtual();
-
         inicializarComponentes();
-        lista.setHasFixedSize(true);
+
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
             .build();
         ImageLoader.getInstance().init(config);
 
+        lista.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         lista.setLayoutManager(layoutManager);
-
         objetos = new ArrayList<Objeto>();
 
-        /*objetoDAO = new ObjetoDAO(MeusObjetos.this);
-        Cursor cursor = objetoDAO.procurarObjetosDono(ID_DONO_ATUAL);
-
-        //Carregando meus objetos do banco
-        if(cursor.getCount() == 0){
-            isListavazia();
-        }else{
-            while(cursor.moveToNext()){
-                Objeto obj = new Objeto(Integer.toString(cursor.getInt(0)),
-                        DONO_ATUAL,
-                        cursor.getString(2),
-                        cursor.getString(3),
-                        getImage(cursor.getBlob(4)));
-                objetos.add(obj);
-            }
-        }
-        cursor.close();
-
-        */
         //Todo: Solicitar ou recusar pedidos
 
         fabPesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(MeusObjetos.this, PesquisarObjetos.class);
-                intent1.putExtra("idDonoAtual",ID_DONO_ATUAL);
+                intent1.putExtra("donoAtual",DONO_ATUAL);
                 startActivityForResult(intent1,PEDIR);
             }
         });
@@ -135,7 +113,6 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             }
         });
         fabSolicitacoes.setVisibility(View.GONE);
-        //Todo: Consertar Update
 
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -338,10 +315,6 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
 
     private void carregarObjetos() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        String path = "objetos/"+ ID_DONO_ATUAL+"/";
-        StorageReference sr = storage.getReference(path);
-
         //Carregando os objetos do usuário atual
         loadingData();
 
@@ -505,7 +478,8 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     public Bitmap getImage(byte[] imagem) {
         return BitmapFactory.decodeByteArray(imagem, 0, imagem.length);
     }
-    public byte[] getBytes(Bitmap bitmap) {
+
+    public byte[] getBytes(@NonNull Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
         return stream.toByteArray();
