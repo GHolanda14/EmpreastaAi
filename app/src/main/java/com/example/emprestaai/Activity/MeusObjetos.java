@@ -57,7 +57,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     RecyclerView.LayoutManager layoutManager;
     TextView tvObjeto;
     FloatingActionButton fabAdd, fabPesquisar, fabPedidos, fabSolicitacoes;
-    int ADD = 1, VISUALIZAR=2, EXCLUIR = 3, EDITAR = 4, PEDIR = 5, SOLICITADO = 6;
+    int ADD = 1, VISUALIZAR=2, EXCLUIR = 3, EDITAR = 4, PEDIR = 5, SOLICITADO = 6, SOLICITACOES = 7;
     String idObjeto;
     String DONO_ATUAL, ID_DONO_ATUAL;
     ImageView imageView;
@@ -75,12 +75,13 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
             .build();
         ImageLoader.getInstance().init(config);
-        //Todo: Consertar o layout das solicitacoes (talvez mudando a posição dos botões)
+
         lista.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         lista.setLayoutManager(layoutManager);
         objetos = new ArrayList<Objeto>();
-
+        //Todo: Colocar a câmera para tirar foto
+        //Todo: Colocar o maps e localização
         fabPesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,7 +105,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             public void onClick(View v) {
                 Intent intent1 = new Intent(MeusObjetos.this, Solicitacoes.class);
                 intent1.putExtra("donoAtual",DONO_ATUAL);
-                startActivity(intent1);
+                startActivityForResult(intent1,SOLICITACOES);
             }
         });
 
@@ -284,6 +285,21 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                     }
                 });
                 }
+            }else if(requestCode == SOLICITACOES){
+                if(resultCode == RESULT_OK){
+                    loadingData();
+                    idObjeto = data.getStringExtra("idObjeto");
+                    int posi = getIndexObj();
+
+                    Objeto obj = new Objeto(idObjeto,
+                            DONO_ATUAL,
+                            objetos.get(posi).getNome(),
+                            data.getStringExtra("status"),
+                            objetos.get(posi).getImagem());
+                    objetos.set(posi,obj);
+                    adapter.notifyItemChanged(posi);
+                    isListavazia();
+                }
             }
         }
 
@@ -415,7 +431,6 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 }
             });
     }
-    //Todo: Atualizar recyclerview dos meus objetos quando ele emprestar um objeto
 
     public void excluirFotoAtual(int opcao, String nome, String status, byte[] imagem) {
         int posi = getIndexObj();

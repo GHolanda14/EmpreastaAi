@@ -3,6 +3,7 @@ package com.example.emprestaai.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -21,6 +22,7 @@ import com.example.emprestaai.Model.Objeto;
 import com.example.emprestaai.Model.Pedido;
 import com.example.emprestaai.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,7 +42,7 @@ public class Solicitacoes extends AppCompatActivity implements SolicitacaoAdapte
     RecyclerView.LayoutManager layoutManager;
     ProgressBar progressBar;
     String donoAtual;
-    int VISUALIZAR = 2, ACEITO = 3, RECUSADO = 4;
+    int VISUALIZAR = 2, ACEITO = 8, RECUSADO = 9;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,25 +163,63 @@ public class Solicitacoes extends AppCompatActivity implements SolicitacaoAdapte
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
-            loadingData();
-            int i = getIndexPedido(data.getStringExtra("idPedido"));
-            Pedido p = new Pedido(solicitacoes.get(i).getIdPedido(),
-                    solicitacoes.get(i).getObjeto(),
-                    solicitacoes.get(i).getPeriodo(),
-                    solicitacoes.get(i).getLocal(),
-                    solicitacoes.get(i).getSolicitante(),
-                    data.getStringExtra("status"));
+        if(resultCode == ACEITO){
+            String idPedido = data.getStringExtra("idPedido");
+            String idObjeto = data.getStringExtra("idObjeto");
+            final String[] status = {data.getStringExtra("status")};
 
-            solicitacoes.set(i,p);
-            adapter = new PedidoAdapter(Solicitacoes.this,solicitacoes);
-            listaSolicitacoes.setAdapter(adapter);
-            isListavazia();
+            loadingData();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("Pedidos")
+                    .document(idPedido)
+                    .update("status", status[0])
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                status[0] = status[0].equals(getString(R.string.hEmprestado)) ? getString(R.string.hEmprestado) : getString(R.string.hDisponível);
+                                db.collection("Objetos")
+                                        .document(idObjeto)
+                                        .update("status",status[0])
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task2) {
+                                                if(task2.isSuccessful()){
+                                                    int i = getIndexPedido(idPedido);
+                                                    Pedido p = new Pedido(solicitacoes.get(i).getIdPedido(),
+                                                            solicitacoes.get(i).getObjeto(),
+                                                            solicitacoes.get(i).getPeriodo(),
+                                                            solicitacoes.get(i).getLocal(),
+                                                            solicitacoes.get(i).getSolicitante(),
+                                                            status[0]);
+
+                                                    solicitacoes.set(i,p);
+                                                    adapter = new PedidoAdapter(Solicitacoes.this,solicitacoes);
+                                                    listaSolicitacoes.setAdapter(adapter);
+                                                    isListavazia();
+
+                                                    Intent result = new Intent();
+                                                    result.putExtra("idObjeto",p.getObjeto().getIdObjeto());
+                                                    result.putExtra("status",status[0]);
+                                                    setResult(RESULT_OK,result);
+                                                }
+                                            }
+                                        });
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("msg",e.getMessage());
+                        }
+                    });
+
             if(data.getStringExtra("status").equals(getString(R.string.hEmprestado))){
                 Toast.makeText(Solicitacoes.this, "Objeto emprestado!", Toast.LENGTH_SHORT).show();
             }else{
                 Toast.makeText(Solicitacoes.this, "Objeto recusado!", Toast.LENGTH_SHORT).show();
             }
+
         }
     }
     public int getIndexPedido(String idPedido){

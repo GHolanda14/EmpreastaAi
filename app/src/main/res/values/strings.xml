@@ -64,4 +64,6 @@
 
     <!--Status-->
     <string name="hSolicitado">Solicitado</string>
+    <string name="hRecusado">Recusado</string>
+    <string name="hDisponível">Disponível</string>
 </resources>

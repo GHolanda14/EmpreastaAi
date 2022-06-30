@@ -4,26 +4,21 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.emprestaai.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class VisualizarSolicitacao extends AppCompatActivity {
     ImageView ivObjeto;
     TextView tvNomeObjSol, tvStatusSol, tvSolicitanteSol, tvPeriodoSol, tvLocalSol;
     Button btnAceitar, btnRecusar;
     String idPedido, idObjeto;
+    int ACEITO = 8, RECUSADO = 9;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,44 +32,24 @@ public class VisualizarSolicitacao extends AppCompatActivity {
         btnAceitar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("Pedidos")
-                        .document(idPedido)
-                        .update("status","Emprestado")
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
-                                    db.collection("Objetos")
-                                            .document(idObjeto)
-                                            .update("status","Emprestado")
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task2) {
-                                                    if(task2.isSuccessful()){
-                                                        Intent data = new Intent();
-                                                        data.putExtra("idPedido",getIntent().getStringExtra("idPedido"));
-                                                        data.putExtra("status",getString(R.string.hEmprestado));
-                                                        setResult(RESULT_OK,data);
-                                                        VisualizarSolicitacao.this.finish();
-                                                    }
-                                                }
-                                    });
-                                }
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("msg",e.getMessage());
-                            }
-                        });
+                Intent intent2 = new Intent();
+                intent2.putExtra("idPedido",idPedido);
+                intent2.putExtra("idObjeto",idObjeto);
+                intent2.putExtra("status",getString(R.string.hEmprestado));
+                setResult(ACEITO,intent2);
+                VisualizarSolicitacao.this.finish();
             }
         });
 
         btnRecusar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent2 = new Intent();
+                intent2.putExtra("idPedido",idPedido);
+                intent2.putExtra("idObjeto",idObjeto);
+                intent2.putExtra("status",getString(R.string.hRecusado));
+                setResult(ACEITO,intent2);
+                VisualizarSolicitacao.this.finish();
             }
         });
     }
