@@ -48,7 +48,7 @@ public class ListaPedidos extends AppCompatActivity{
         donoAtual = intent.getStringExtra("donoAtual");
 
         listaPedidos = (RecyclerView) findViewById(R.id.rvPedidos);
-        tvListPedidosVazio = (TextView) findViewById(R.id.tvListPedidosVazio);
+        tvListPedidosVazio = (TextView) findViewById(R.id.tvListPedidosVazios);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         listaPedidos.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -108,6 +108,9 @@ public class ListaPedidos extends AppCompatActivity{
     }
                 });
     }
+    /*Todo: O solicitação só é egar a visão de quem é o dono nos pedidos e fazer um adapter:
+       Todo: Depois que a pessoa aceitar ou recusar, o objeto em si muda o status para indisponível
+       Todo: O pedido muda para Emprestado*/
 
     public void loadingData(){
         progressBar.setVisibility(View.VISIBLE);

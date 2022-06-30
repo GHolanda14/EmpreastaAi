@@ -59,7 +59,7 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         Intent intent = getIntent();
         donoAtual = intent.getStringExtra("donoAtual");
         tvObjVazio = (TextView) findViewById(R.id.tvObjVazio);
-        lista = (RecyclerView) findViewById(R.id.rvPedidos);
+        lista = (RecyclerView) findViewById(R.id.rvResultadoPesquisa);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         objetos = new ArrayList<Objeto>();

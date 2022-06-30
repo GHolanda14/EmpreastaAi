@@ -78,7 +78,9 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
             .build();
         ImageLoader.getInstance().init(config);
-
+        //Todo: Quando aceitar a solicitação, mudar o status do objeto para indisponível
+        //Todo: Se o status for emprestado, não mostrar os botões
+        //Todo: Consertar o layout das solicitacoes (talvez mudando a posição dos botões)
         lista.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         lista.setLayoutManager(layoutManager);
@@ -108,10 +110,10 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(MeusObjetos.this, Solicitacoes.class);
+                intent1.putExtra("donoAtual",DONO_ATUAL);
                 startActivity(intent1);
             }
         });
-        fabSolicitacoes.setVisibility(View.GONE);
 
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,7 +127,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     private void inicializarComponentes() {
         tvObjeto = (TextView) findViewById(R.id.tvObjeto);
         tvObjeto.setVisibility(View.GONE);
-        lista = (RecyclerView) findViewById(R.id.rvPedidos);
+        lista = (RecyclerView) findViewById(R.id.rvMeusObjetos);
         fabAdd = (FloatingActionButton) findViewById(R.id.add);
         fabPesquisar = (FloatingActionButton) findViewById(R.id.pesquisar);
         fabPedidos = (FloatingActionButton) findViewById(R.id.meusPedidos);
