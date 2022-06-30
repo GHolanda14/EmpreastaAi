@@ -10,6 +10,7 @@
     <string name="tvStatus">Status</string>
     <string name="tvListPedidosVazia">Nenhum pedido foi feito</string>
     <string name="tvEmailCadastrado">Esse e-mail já está cadastrado!</string>
+    <string name="tvSemSolicitacoes">Sem solicitações pendentes</string>
     <!--Button-->
     <string name="btnLogin">Login</string>
     <string name="btnCadastro">Cadastrar-se</string>
@@ -18,7 +19,9 @@
     <string name="btnEditar">Editar</string>
     <string name="btnExcluir">Excluir</string>
     <string name="btnPedir">Pedir</string>
-    <string name="btnIndisponivel">Indisponível</string>
+    <string name="btnIndisponivel">Indisponível</string>+
+    <string name="btnRecusar">Recusar</string>
+    <string name="btnAceitar">Aceitar</string>
 
     <!--Hint-->
     <string name="hNome">Nome</string>
@@ -32,6 +35,8 @@
     <string name="hLocal">Local</string>
     <string name="hData">Período</string>
     <string name="hDono">Dono</string>
+    <string name="hSolicitante">Solicitante</string>
+    <string name="hEmprestado">Emprestado</string>
 
     <!-- Example -->
     <string name="exEmail">exemplo@provedor.com</string>

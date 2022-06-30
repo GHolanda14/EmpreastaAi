@@ -26,10 +26,10 @@
             android:id="@+id/progressBar"
             style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
     </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvPedidos"
+            android:id="@+id/rvMeusObjetos"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -43,7 +43,9 @@
         android:gravity="center"
         android:text="@string/tvVazio"
         android:textColor="#D31515"
-        android:textSize="34sp" />
+        android:textSize="34sp"
+        app:layout_anchor="@+id/rvMeusObjetos"
+        app:layout_anchorGravity="center" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"

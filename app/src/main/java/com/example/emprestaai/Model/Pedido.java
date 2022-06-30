@@ -6,13 +6,15 @@ public class Pedido{
     String local;
     String periodo;
     String solicitante;
+    String status;
 
-    public Pedido(String idPedido, Objeto objeto, String periodo,String local, String solicitante) {
+    public Pedido(String idPedido, Objeto objeto, String periodo,String local, String solicitante, String status) {
         this.idPedido = idPedido;
         this.objeto = objeto;
         this.local = local;
         this.periodo = periodo;
         this.solicitante = solicitante;
+        this.status = status;
     }
 
     public Objeto getObjeto() {
@@ -54,4 +56,9 @@ public class Pedido{
         this.solicitante = solicitante;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status){ this.status = status;}
 }

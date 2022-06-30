@@ -43,7 +43,7 @@ public class VisualizarObjeto extends AppCompatActivity {
         btnExcluir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(tvStatus.getText().toString().equals(getString(R.string.tgStatusOff))){
+                if(!tvStatus.getText().toString().equals(getString(R.string.tgStatusOn))){
                     Toast.makeText(VisualizarObjeto.this, "Não é possível deletar um objeto que está emprestado.", Toast.LENGTH_LONG).show();
                 }else{
                     Intent ints = new Intent();

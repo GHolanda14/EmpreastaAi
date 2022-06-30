@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.ViewHolder> {
     private ArrayList<Pedido> pedidos;
     Context activity;
+
     public PedidoAdapter(Context context,ArrayList<Pedido> pedidos) {
         activity = context;
         this.pedidos = pedidos;
@@ -33,7 +34,7 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.ViewHolder
             dImagem = itemView.findViewById(R.id.ivObjeto);
             tvStatus = itemView.findViewById(R.id.tvStatus);
             tvLocalEncontro = itemView.findViewById(R.id.tvLocalEncontro);
-            tvDono = itemView.findViewById(R.id.tvDono);
+            tvDono = itemView.findViewById(R.id.tvSolicitante);
 
         }
     }
@@ -48,7 +49,7 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.tvNome.setText(pedidos.get(position).getObjeto().getNome());
-        holder.tvStatus.setText(pedidos.get(position).getObjeto().getStatus());
+        holder.tvStatus.setText(pedidos.get(position).getStatus());
         holder.tvLocalEncontro.setText(pedidos.get(position).getLocal());
         holder.tvPeriodo.setText(pedidos.get(position).getPeriodo());
         holder.tvDono.setText(pedidos.get(position).getObjeto().getDono());

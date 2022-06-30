@@ -46,7 +46,7 @@ public class AlugarObjeto extends AppCompatActivity {
         tiLocal = (TextInputLayout) findViewById(R.id.tiLocal);
         tiData = (TextInputEditText) findViewById(R.id.tiData);
         btnSolicitar = (Button) findViewById(R.id.btnSolicitar);
-        ivObjetoAluObj = (ImageView) findViewById(R.id.ivObjetoAluObj);
+        ivObjetoAluObj = (ImageView) findViewById(R.id.ivObjetoSol);
 
         tvDonoObj.setText(intent.getStringExtra("dono"));
         tvNomeAlugarObj.setText(intent.getStringExtra("nome"));
@@ -95,11 +95,11 @@ public class AlugarObjeto extends AppCompatActivity {
                     Intent intent1 = new Intent();
                     intent1.putExtra("dono",tvDonoObj.getText().toString().trim());
                     intent1.putExtra("idObjeto", intent.getStringExtra("idObjeto"));
-                    intent1.putExtra("nome",tvNomeAlugarObj.getText().toString().trim());
+                    intent1.putExtra("nomeObj",tvNomeAlugarObj.getText().toString().trim());
                     intent1.putExtra("status",getString(R.string.hSolicitado));
                     intent1.putExtra("periodo",tiData.getText().toString());
                     intent1.putExtra("local",tiLocal.getEditText().getText().toString());
-                    intent1.putExtra("imagem",intent.getByteArrayExtra("imagem"));
+                    intent1.putExtra("imagem",intent.getStringExtra("imagem"));
                     setResult(SOLICITADO,intent1);
                     AlugarObjeto.this.finish();
                 }

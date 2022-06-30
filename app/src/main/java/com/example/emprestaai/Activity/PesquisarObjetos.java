@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -19,6 +21,13 @@ import com.example.emprestaai.DAO.UsuarioDAO;
 import com.example.emprestaai.Model.Objeto;
 import com.example.emprestaai.R;
 import com.example.emprestaai.databinding.ActivityPesquisarObjetosBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -34,8 +43,9 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
     RecyclerView.LayoutManager layoutManager;
     TextView tvObjVazio;
     int PEDIR = 5, SOLICITADO = 6;
-    String idDonoAtual, donoAtual;
+    String donoAtual;
     UsuarioDAO usuarioDAO;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +57,13 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         setSupportActionBar(binding.toolbar);
 
         Intent intent = getIntent();
-        idDonoAtual = intent.getStringExtra("idDonoAtual");
+        donoAtual = intent.getStringExtra("donoAtual");
         tvObjVazio = (TextView) findViewById(R.id.tvObjVazio);
-        lista = (RecyclerView) findViewById(R.id.rvPedidos);
+        lista = (RecyclerView) findViewById(R.id.rvResultadoPesquisa);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         objetos = new ArrayList<Objeto>();
-        //objetoDAO = new ObjetoDAO(PesquisarObjetos.this);
-        //carregarObjetos(intent.getStringExtra("idDonoAtual"));
+        carregarObjetos(donoAtual);
 
 
         lista.setHasFixedSize(true);
@@ -81,37 +91,54 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         });
     }
 
-//    private void carregarObjetos(String idDono) {
-//        Cursor cursor = objetoDAO.procurarObjetos(idDono);
-//        usuarioDAO = new UsuarioDAO(PesquisarObjetos.this);
-//        Cursor cursor2 = usuarioDAO.pegarNomes();
-//
-//        ArrayList<Pair<Integer, String>> pares = new ArrayList<Pair<Integer,String>>();
-//        while (cursor2.moveToNext()){
-//            pares.add(new Pair<Integer, String>(cursor2.getInt(0),cursor2.getString(1)));
-//        }
-//        if(cursor.getCount() == 0){
-//            listaVazia();
-//        }else{
-//            listaCheia();
-//            while (cursor.moveToNext()){
-//                String nomeDono = "";
-//                for(Pair<Integer,String> par : pares){
-//                    if(par.first == cursor.getInt(1)){
-//                        nomeDono = par.second;
-//                        break;
-//                    }
-//                }
-//                objetos.add(new Objeto(Integer.toString(cursor.getInt(0)),
-//                        nomeDono,
-//                        cursor.getString(2),
-//                        cursor.getString(3),
-//                        getImage(cursor.getBlob(4))));
-//            }
-//        }
-//        cursor.close();
-//        cursor2.close();
-//    }
+    private void carregarObjetos(String donoAtual) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //Carregando os objetos do usuário atual
+        loadingData();
+
+        db.collection("Objetos")
+                .whereNotEqualTo("dono",donoAtual)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        objetos.clear();
+                        if(task.isSuccessful()){
+                            if(task.getResult().isEmpty()){
+                                progressBar.setVisibility(View.GONE);
+                                isListavazia();
+                                adapter = new ObjetoAdapter(PesquisarObjetos.this, objetos);
+                                lista.setAdapter(adapter);
+                            }else {
+                                ImageLoader imageLoader = ImageLoader.getInstance();
+                                for(DocumentSnapshot snapshot : task.getResult()) {
+                                    imageLoader.loadImage(snapshot.getString("imagem"), new SimpleImageLoadingListener() {
+                                        @Override
+                                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                                            Objeto obj = new Objeto(snapshot.getId(),
+                                                    snapshot.getString("dono"),
+                                                    snapshot.getString("nome"),
+                                                    snapshot.getString("status"),
+                                                    loadedImage);
+                                            objetos.add(obj);
+                                            adapter = new ObjetoAdapter(PesquisarObjetos.this, objetos);
+                                            lista.setAdapter(adapter);
+                                            progressBar.setVisibility(View.GONE);
+                                            isListavazia();
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void loadingData() {
+        progressBar.setVisibility(View.VISIBLE);
+        lista.setVisibility(View.GONE);
+        tvObjVazio.setVisibility(View.GONE);
+    }
+
     public Bitmap getImage(byte[] image) {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
@@ -166,12 +193,13 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         }
     }
 
-    public void listaVazia(){
-        tvObjVazio.setVisibility(View.VISIBLE);
-        lista.setVisibility(View.GONE);
-    }
-    public void listaCheia(){
-        tvObjVazio.setVisibility(View.GONE);
-        lista.setVisibility(View.VISIBLE);
+    public void isListavazia() {
+        if (objetos.isEmpty()) {
+            tvObjVazio.setVisibility(View.VISIBLE);
+            lista.setVisibility(View.GONE);
+        } else {
+            tvObjVazio.setVisibility(View.GONE);
+            lista.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".Activity.ListaPedidos">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPedidos"
         android:layout_width="match_parent"
@@ -15,7 +21,7 @@
     </androidx.recyclerview.widget.RecyclerView>
 
     <TextView
-        android:id="@+id/tvListPedidosVazio"
+        android:id="@+id/tvListPedidosVazios"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

@@ -93,8 +93,7 @@ public class NovoObjeto extends AppCompatActivity {
         return BitmapFactory.decodeByteArray(imagem, 0, imagem.length);
     }
 
-    //Todo: Adicionar campo de StatusPedido no PedidoDAO
-    //Todo: Criar uma lógica para poder termos uma atividade chamada Solicitações   
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
