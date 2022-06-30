@@ -25,7 +25,7 @@ public class UsuarioDAO extends SQLiteOpenHelper {
         super(context, NOME_BD, null, VERSAO_BD);
         this.context = context;
     }
-        //TODO: DAO Solicitacao?
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         String query = "CREATE TABLE " + NOME_TABELA +

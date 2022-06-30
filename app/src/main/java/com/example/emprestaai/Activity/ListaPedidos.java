@@ -28,7 +28,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 
 import java.util.ArrayList;
 
-public class ListaPedidos extends AppCompatActivity{
+public class ListaPedidos extends AppCompatActivity {
     ArrayList<Pedido> pedidos;
     RecyclerView listaPedidos;
     RecyclerView.Adapter adapter;
@@ -58,23 +58,23 @@ public class ListaPedidos extends AppCompatActivity{
         loadingData();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("Pedidos")
-                .whereEqualTo("solicitante",donoAtual)
+                .whereEqualTo("solicitante", donoAtual)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> taskPedidos) {
-                        if(taskPedidos.isSuccessful()){
-                            if(taskPedidos.getResult().isEmpty()){
-                                adapter = new PedidoAdapter(ListaPedidos.this,pedidos);
+                        if (taskPedidos.isSuccessful()) {
+                            if (taskPedidos.getResult().isEmpty()) {
+                                adapter = new PedidoAdapter(ListaPedidos.this, pedidos);
                                 listaPedidos.setAdapter(adapter);
                                 isListavazia();
-                            }else{
-                                for(DocumentSnapshot snapshotPedidos : taskPedidos.getResult()){
+                            } else {
+                                for (DocumentSnapshot snapshotPedidos : taskPedidos.getResult()) {
                                     db.collection("Objetos")
                                             .document(snapshotPedidos.get("idObjeto").toString())
                                             .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<DocumentSnapshot> taskObjetos) {
-                                                    if(taskObjetos.isSuccessful()){
+                                                    if (taskObjetos.isSuccessful()) {
                                                         ImageLoader imageLoader = ImageLoader.getInstance();
                                                         DocumentSnapshot snapshotObjetos = taskObjetos.getResult();
                                                         imageLoader.loadImage(snapshotObjetos.getString("imagem"), new SimpleImageLoadingListener() {
@@ -92,25 +92,27 @@ public class ListaPedidos extends AppCompatActivity{
                                                                         snapshotPedidos.getString("solicitante"),
                                                                         snapshotPedidos.getString("status"));
                                                                 pedidos.add(p);
-                                                                adapter = new PedidoAdapter(ListaPedidos.this,pedidos);
+                                                                adapter = new PedidoAdapter(ListaPedidos.this, pedidos);
                                                                 listaPedidos.setAdapter(adapter);
                                                                 isListavazia();
                                                             }
                                                         });
+                                                    }
                                                 }
-                                            };
-                                });
-                        }
-                    }
-                };
 
-           setResult(VISUALIZAR,intent);
-    }
+                                                ;
+                                            });
+                                }
+                            }
+                        }
+                        ;
+
+                        setResult(VISUALIZAR, intent);
+                    }
                 });
     }
-    /*Todo: O solicitação só é egar a visão de quem é o dono nos pedidos e fazer um adapter:
-       Todo: Depois que a pessoa aceitar ou recusar, o objeto em si muda o status para indisponível
-       Todo: O pedido muda para Emprestado*/
+
+
 
     public void loadingData(){
         progressBar.setVisibility(View.VISIBLE);

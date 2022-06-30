@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emprestaai.Adapter.ObjetoAdapter;
-import com.example.emprestaai.DAO.PedidoDAO;
 import com.example.emprestaai.Model.Objeto;
 import com.example.emprestaai.R;
 import com.google.android.gms.tasks.Continuation;
@@ -61,7 +60,6 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
     int ADD = 1, VISUALIZAR=2, EXCLUIR = 3, EDITAR = 4, PEDIR = 5, SOLICITADO = 6;
     String idObjeto;
     String DONO_ATUAL, ID_DONO_ATUAL;
-    PedidoDAO pedidoDAO;
     ImageView imageView;
     ProgressBar progressBar;
 
@@ -74,19 +72,14 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         getDonoAtual();
         inicializarComponentes();
 
-
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
             .build();
         ImageLoader.getInstance().init(config);
-        //Todo: Quando aceitar a solicitação, mudar o status do objeto para indisponível
-        //Todo: Se o status for emprestado, não mostrar os botões
         //Todo: Consertar o layout das solicitacoes (talvez mudando a posição dos botões)
         lista.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         lista.setLayoutManager(layoutManager);
         objetos = new ArrayList<Objeto>();
-
-        //Todo: Solicitar ou recusar pedidos
 
         fabPesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -422,6 +415,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 }
             });
     }
+    //Todo: Atualizar recyclerview dos meus objetos quando ele emprestar um objeto
 
     public void excluirFotoAtual(int opcao, String nome, String status, byte[] imagem) {
         int posi = getIndexObj();

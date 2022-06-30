@@ -1,14 +1,16 @@
 package com.example.emprestaai.Activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,18 +28,19 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
-public class Solicitacoes extends AppCompatActivity{
+public class Solicitacoes extends AppCompatActivity implements SolicitacaoAdapter.PedidoClicado {
     TextView tvNome, tvPeriodo, tvStatus, tvLocalEncontro,tvSolicitante, tvSemSolicitacoes;
     ImageView dImagem;
-    ImageButton btnAceitar, btnRecusar;
     ArrayList<Pedido> solicitacoes;
     RecyclerView listaSolicitacoes;
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
     ProgressBar progressBar;
     String donoAtual;
+    int VISUALIZAR = 2, ACEITO = 3, RECUSADO = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,10 @@ public class Solicitacoes extends AppCompatActivity{
 
         donoAtual = getIntent().getStringExtra("donoAtual");
         inicializarComponentes();
+
+        listaSolicitacoes.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        listaSolicitacoes.setLayoutManager(layoutManager);
         solicitacoes = new ArrayList<Pedido>();
 
         loadingData();
@@ -73,7 +80,7 @@ public class Solicitacoes extends AppCompatActivity{
                                                         imageLoader.loadImage(snapshotObjetos.getString("imagem"), new SimpleImageLoadingListener() {
                                                             @Override
                                                             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                                                                Objeto obj = new Objeto(snapshotPedidos.getId(),
+                                                                Objeto obj = new Objeto(snapshotObjetos.getId(),
                                                                         snapshotObjetos.getString("dono"),
                                                                         snapshotObjetos.getString("nome"),
                                                                         snapshotObjetos.getString("status"),
@@ -100,6 +107,8 @@ public class Solicitacoes extends AppCompatActivity{
                 });
     }
 
+
+
     private void loadingData() {
         progressBar.setVisibility(View.VISIBLE);
         listaSolicitacoes.setVisibility(View.GONE);
@@ -124,14 +133,62 @@ public class Solicitacoes extends AppCompatActivity{
         tvStatus = findViewById(R.id.tvStatus);
         tvLocalEncontro = findViewById(R.id.tvLocalEncontro);
         tvSolicitante = findViewById(R.id.tvSolicitante);
-        btnAceitar = findViewById(R.id.btnAceitar);
-        btnRecusar = findViewById(R.id.btnRecusar);
         listaSolicitacoes = findViewById(R.id.rvSolicitacoes);
         tvSemSolicitacoes = findViewById(R.id.tvSemSolicitacoes);
         progressBar = findViewById(R.id.progressBar);
-
-        listaSolicitacoes.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        listaSolicitacoes.setLayoutManager(layoutManager);
     }
+
+    @Override
+    public void onPedidoClicked(int posicao, ArrayList<Pedido> pedidos) {
+        Intent intent = new Intent(Solicitacoes.this, VisualizarSolicitacao.class);
+        Pedido ped = this.solicitacoes.get(posicao);
+        intent.putExtra("solicitante",ped.getSolicitante());
+        intent.putExtra("local",ped.getLocal());
+        intent.putExtra("status",ped.getStatus());
+        intent.putExtra("periodo",ped.getPeriodo());
+        intent.putExtra("imagem",getBytes(ped.getObjeto().getImagem()));
+        intent.putExtra("nome",ped.getObjeto().getNome());
+        intent.putExtra("idObjeto",ped.getObjeto().getIdObjeto());
+        intent.putExtra("idPedido",ped.getIdPedido());
+        startActivityForResult(intent,VISUALIZAR);
+    }
+    public byte[] getBytes(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        return stream.toByteArray();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            loadingData();
+            int i = getIndexPedido(data.getStringExtra("idPedido"));
+            Pedido p = new Pedido(solicitacoes.get(i).getIdPedido(),
+                    solicitacoes.get(i).getObjeto(),
+                    solicitacoes.get(i).getPeriodo(),
+                    solicitacoes.get(i).getLocal(),
+                    solicitacoes.get(i).getSolicitante(),
+                    data.getStringExtra("status"));
+
+            solicitacoes.set(i,p);
+            adapter = new PedidoAdapter(Solicitacoes.this,solicitacoes);
+            listaSolicitacoes.setAdapter(adapter);
+            isListavazia();
+            if(data.getStringExtra("status").equals(getString(R.string.hEmprestado))){
+                Toast.makeText(Solicitacoes.this, "Objeto emprestado!", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(Solicitacoes.this, "Objeto recusado!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    public int getIndexPedido(String idPedido){
+        for(Pedido p : solicitacoes){
+            if(p.getIdPedido().equals(idPedido)){
+                return solicitacoes.indexOf(p);
+            }
+        }
+        return 0;
+    }
+
 }
