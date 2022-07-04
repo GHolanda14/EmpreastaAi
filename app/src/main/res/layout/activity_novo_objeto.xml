@@ -57,8 +57,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
-                android:maxWidth="100dp"
-                android:maxHeight="150dp"
                 android:scaleType="centerInside" />
         </RelativeLayout>
 

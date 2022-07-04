@@ -46,7 +46,7 @@ public class AlugarObjeto extends AppCompatActivity {
         tiLocal = (TextInputLayout) findViewById(R.id.tiLocal);
         tiData = (TextInputEditText) findViewById(R.id.tiData);
         btnSolicitar = (Button) findViewById(R.id.btnSolicitar);
-        ivObjetoAluObj = (ImageView) findViewById(R.id.ivObjetoSol);
+        ivObjetoAluObj = (ImageView) findViewById(R.id.ivObjetoAluObj);
 
         tvDonoObj.setText(intent.getStringExtra("dono"));
         tvNomeAlugarObj.setText(intent.getStringExtra("nome"));
