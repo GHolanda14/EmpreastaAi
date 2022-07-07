@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emprestaai.Adapter.PedidoAdapter;
-import com.example.emprestaai.DAO.PedidoDAO;
 import com.example.emprestaai.Model.Objeto;
 import com.example.emprestaai.Model.Pedido;
 import com.example.emprestaai.R;
@@ -34,7 +33,6 @@ public class ListaPedidos extends AppCompatActivity {
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
     TextView tvListPedidosVazio;
-    PedidoDAO pedidoDAO;
     String donoAtual;
     int VISUALIZAR = 2;
     ProgressBar progressBar;

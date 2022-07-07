@@ -1,6 +1,8 @@
 package com.example.emprestaai.Activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -71,6 +74,15 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         ID_DONO_ATUAL = FirebaseAuth.getInstance().getUid();
         getDonoAtual();
         inicializarComponentes();
+
+            ActivityCompat.requestPermissions(MeusObjetos.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION},
+                    PackageManager.PERMISSION_GRANTED);
+
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
             .build();

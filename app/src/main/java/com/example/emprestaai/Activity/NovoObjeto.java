@@ -1,11 +1,9 @@
 package com.example.emprestaai.Activity;
 
-import android.Manifest;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,7 +20,6 @@ import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import com.example.emprestaai.R;
 import com.google.android.material.textfield.TextInputLayout;
@@ -49,9 +46,6 @@ public class NovoObjeto extends AppCompatActivity {
         setContentView(R.layout.activity_novo_objeto);
 
         Intent intent = getIntent();
-        ActivityCompat.requestPermissions(NovoObjeto.this,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
-                PackageManager.PERMISSION_GRANTED);
 
         if (Build.VERSION.SDK_INT >= 24) {
             try {

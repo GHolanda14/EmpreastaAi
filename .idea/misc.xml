@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.123" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/drawable/ic_novoObjeto_foreground.xml" value="0.2265" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/drawable/ic_pedirObjetos_foreground.xml" value="0.2265" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/drawable/ic_solicitacoes_background.xml" value="0.1" />
@@ -14,6 +15,8 @@
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_login.xml" value="0.16041666666666668" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_main2.xml" value="0.16041666666666668" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_mapa.xml" value="0.176" />
+        <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_maps.xml" value="0.11302083333333333" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_menu.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_meus_objetos.xml" value="0.264" />
         <entry key="..\:/Users/gabri/AndroidStudioProjects/EmprestaAi/app/src/main/res/layout/activity_novo_objeto.xml" value="0.22826086956521738" />

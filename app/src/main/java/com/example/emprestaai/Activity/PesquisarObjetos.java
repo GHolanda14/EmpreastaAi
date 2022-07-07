@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emprestaai.Adapter.ObjetoAdapter;
-import com.example.emprestaai.DAO.UsuarioDAO;
 import com.example.emprestaai.Model.Objeto;
 import com.example.emprestaai.R;
 import com.example.emprestaai.databinding.ActivityPesquisarObjetosBinding;
@@ -27,6 +26,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.io.ByteArrayOutputStream;
@@ -44,7 +44,6 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
     TextView tvObjVazio;
     int PEDIR = 5, SOLICITADO = 6;
     String donoAtual;
-    UsuarioDAO usuarioDAO;
     ProgressBar progressBar;
 
     @Override
@@ -55,6 +54,9 @@ public class PesquisarObjetos extends AppCompatActivity implements ObjetoAdapter
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .build();
+        ImageLoader.getInstance().init(config);
 
         Intent intent = getIntent();
         donoAtual = intent.getStringExtra("donoAtual");

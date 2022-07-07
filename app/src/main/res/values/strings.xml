@@ -66,4 +66,6 @@
     <string name="hSolicitado">Solicitado</string>
     <string name="hRecusado">Recusado</string>
     <string name="hDisponível">Disponível</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="descricaoLocal">123 Rua tal, Cidade, UF</string>
 </resources>

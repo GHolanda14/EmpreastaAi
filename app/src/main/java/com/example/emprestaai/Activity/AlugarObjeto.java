@@ -28,8 +28,8 @@ public class AlugarObjeto extends AppCompatActivity {
     LinearLayout layForm;
     ImageView ivObjetoAluObj;
     TextView tvNomeAlugarObj, tvDonoObj;
-    TextInputLayout tiLocal;
     TextInputEditText tiData;
+    TextInputLayout tiLocal;
     Button btnSolicitar;
     DatePickerDialog datePickerDialog;
     int SOLICITADO = 6;
@@ -82,6 +82,14 @@ public class AlugarObjeto extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
+            }
+        });
+
+        tiLocal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(AlugarObjeto.this,Mapa.class);
+                startActivity(intent1);
             }
         });
 
