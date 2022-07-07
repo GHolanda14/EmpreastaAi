@@ -61,6 +61,7 @@ public class Solicitacoes extends AppCompatActivity implements SolicitacaoAdapte
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("Pedidos")
                 .whereEqualTo("dono",donoAtual)
+                .whereNotEqualTo("status",getString(R.string.hRecusado))
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> taskPedidos) {

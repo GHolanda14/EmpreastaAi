@@ -66,6 +66,7 @@ public class NovoObjeto extends AppCompatActivity {
         if (intent.hasExtra("nome")) {
             tiNomeObj.getEditText().setText(intent.getStringExtra("nome"));
             tgStatus.setChecked(intent.getStringExtra("status").equals(getString(R.string.tgStatusOn)) ? true : false);
+            tgStatus.setClickable(intent.getStringExtra("status").equals(getString(R.string.tgStatusOn)) ? true : false);
             imagem = intent.getByteArrayExtra("imagem");
             imageView.setImageBitmap(getImage(imagem));
             imageView.setVisibility(View.VISIBLE);

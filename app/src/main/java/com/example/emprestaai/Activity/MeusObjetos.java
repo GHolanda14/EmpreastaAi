@@ -92,8 +92,7 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         layoutManager = new LinearLayoutManager(this);
         lista.setLayoutManager(layoutManager);
         objetos = new ArrayList<Objeto>();
-        //Todo: Colocar a câmera para tirar foto
-        //Todo: Colocar o maps e localização
+
         fabPesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,6 +154,20 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
         startActivity(intent1);
         finish();
         return true;
+    }
+
+    @Override
+    public void onItemClicked(int posicao, ArrayList<Objeto> objetos) {
+        Objeto obj = this.objetos.get(posicao);
+        Intent intent = new Intent(MeusObjetos.this, VisualizarObjeto.class);
+        intent.putExtra("donoAtual", DONO_ATUAL);
+        intent.putExtra("idObjeto",obj.getIdObjeto());
+        intent.putExtra("idDonoAtual",ID_DONO_ATUAL);
+        intent.putExtra("nome",obj.getNome());
+        intent.putExtra("status",obj.getStatus());
+        intent.putExtra("imagem",getBytes(obj.getImagem()));
+
+        startActivityForResult(intent,VISUALIZAR);
     }
 
     @Override
@@ -314,19 +327,6 @@ public class MeusObjetos extends AppCompatActivity implements ObjetoAdapter.Item
                 }
             }
         }
-
-    @Override
-    public void onItemClicked(int posicao, ArrayList<Objeto> objetos) {
-        Intent intent = new Intent(MeusObjetos.this, VisualizarObjeto.class);
-        Objeto obj = this.objetos.get(posicao);
-        intent.putExtra("donoAtual", DONO_ATUAL);
-        intent.putExtra("idObjeto",obj.getIdObjeto());
-        intent.putExtra("idDonoAtual",ID_DONO_ATUAL);
-        intent.putExtra("nome",obj.getNome());
-        intent.putExtra("status",obj.getStatus());
-        intent.putExtra("imagem",getBytes(obj.getImagem()));
-        startActivityForResult(intent,VISUALIZAR);
-    }
 
     public void getDonoAtual(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();

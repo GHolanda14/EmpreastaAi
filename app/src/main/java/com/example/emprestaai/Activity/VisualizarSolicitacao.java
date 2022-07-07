@@ -83,7 +83,7 @@ public class VisualizarSolicitacao extends AppCompatActivity {
         idObjeto = intent.getStringExtra("idObjeto");
         idPedido = intent.getStringExtra("idPedido");
 
-        if(tvStatusSol.getText().toString().equals(getString(R.string.hEmprestado))){
+        if(!tvStatusSol.getText().toString().equals(getString(R.string.hSolicitado))){
             btnRecusar.setVisibility(View.GONE);
             btnAceitar.setVisibility(View.GONE);
         }
